@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adithya R | AI & Engineering Portfolio</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-blue': '#00f3ff',
+                        'neon-purple': '#bc13fe',
+                        'dark-surface': '#121212',
+                        'dark-deeper': '#050505',
+                    },
+                    fontFamily: {
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
+                        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                    cursor: {
+                        'fancy': 'url(data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%2300f3ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>) 12 12, auto',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f3ff; }
+
+        .glass-card {
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
+        }
+        
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            opacity: 0.1;
+            background-image: 
+                linear-gradient(#00f3ff 1px, transparent 1px),
+                linear-gradient(90deg, #00f3ff 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        .nav-link::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: #00f3ff;
+            transition: width .3s;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .circuit-path { fill: none; stroke: #333; stroke-width: 2; }
+        .circuit-marker { fill: #bc13fe; filter: drop-shadow(0 0 5px #bc13fe); }
+
+        .stagger-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+            grid-auto-rows: 40px;
+            gap: 4px;
+            opacity: 0.3;
+        }
+        .stagger-cell {
+            background-color: #1a1a1a;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .stagger-cell:hover { background-color: #00f3ff; }
+
+        /* Initial states for JS animations */
+        .js-hidden { opacity: 0; }
+        .hero-text-char { display: inline-block; opacity: 0; }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-neon-blue selection:text-black cursor-fancy">
+
+    <!-- Backgrounds -->
+    <div class="grid-bg" id="grid-layer"></div>
+    <div id="particles" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 start-0 border-b border-white/10 glass-card">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse group">
+                <div class="w-10 h-10 relative flex items-center justify-center">
+                    <svg class="w-full h-full stroke-neon-blue logo-svg" viewBox="0 0 50 50" fill="none" stroke-width="2">
+                        <path d="M25 5 L5 25 L25 45 L45 25 Z" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M25 15 L15 25 L25 35 L35 25 Z" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Adithya R</span>
+            </a>
+            <div class="hidden w-full md:block md:w-auto">
+                <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0">
+                    <li><a href="#about" class="nav-link block py-2 px-3 text-white">About</a></li>
+                    <li><a href="#experience" class="nav-link block py-2 px-3 text-white">Experience</a></li>
+                    <li><a href="#projects" class="nav-link block py-2 px-3 text-white">Projects</a></li>
+                    <li><a href="#contact" class="nav-link block py-2 px-3 text-white">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="about" class="h-screen flex items-center justify-center relative overflow-hidden">
+        <div class="text-center z-10 px-4">
+            <div class="hero-line overflow-hidden mb-2">
+                <h2 class="js-hidden text-neon-blue font-mono text-xl md:text-2xl">Hello, World. I am</h2>
+            </div>
+            <div class="hero-line overflow-hidden mb-4">
+                <!-- Text Scramble Target -->
+                <h1 id="hero-title" class="text-5xl md:text-7xl font-bold text-white tracking-tight font-mono">Adithya R</h1>
+            </div>
+            <div class="hero-line overflow-hidden mb-8">
+                <p class="js-hidden text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
+                    Electrical & Electronics Engineer | AI/ML Researcher <br>
+                    <span class="text-sm font-mono text-neon-purple mt-2 block">Building Intelligent Systems @ NIT Calicut</span>
+                </p>
+            </div>
+            
+            <div class="hero-btns js-hidden translate-y-10 flex justify-center gap-4">
+                <button onclick="document.getElementById('projects').scrollIntoView({behavior: 'smooth'})" class="anime-btn relative inline-flex items-center justify-center p-0.5 mb-2 overflow-hidden text-sm font-medium rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white text-white focus:ring-4 focus:outline-none focus:ring-cyan-800">
+                    <span class="relative px-6 py-3 transition-all ease-in-out duration-75 bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                        View Projects
+                    </span>
+                </button>
+                <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="anime-btn text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-6 py-3 mb-2 focus:outline-none border border-gray-600 hover:border-white transition-all">
+                    Contact Me
+                </button>
+            </div>
+        </div>
+
+        <!-- SVG Morph Shape -->
+        <svg class="absolute opacity-20 w-[600px] h-[600px] z-0 pointer-events-none" viewBox="0 0 200 200">
+            <path id="morph-shape" fill="#00f3ff" d="M43.9,-76.3C57.4,-69.3,69.1,-59.5,77.7,-47.8C86.3,-36.1,91.8,-22.4,90.4,-9.1C89,4.2,80.7,17.1,72.4,29.3C64.1,41.5,55.8,53,45.4,62.3C35,71.6,22.5,78.7,9.3,80.8C-3.9,82.9,-17.8,80,-30.7,73.8C-43.6,67.6,-55.5,58.1,-64.8,46.8C-74.1,35.5,-80.8,22.4,-82.1,8.9C-83.4,-4.6,-79.3,-18.5,-71.4,-30.3C-63.5,-42.1,-51.8,-51.8,-39.8,-59.3C-27.8,-66.8,-15.5,-72.1,-1.2,-74.2C13.1,-76.3,26.2,-75.2,43.9,-76.3Z" transform="translate(100 100)" />
+        </svg>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-20 px-4 max-w-6xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-12 flex items-center">
+            <span class="text-neon-blue mr-4 font-mono">01.</span> Experience
+            <span class="ml-4 h-px bg-gray-700 flex-grow max-w-xs"></span>
+        </h2>
+
+        <div class="relative border-l border-gray-700 ml-4 md:ml-6 space-y-12">
+            
+            <!-- Item 1 -->
+            <div class="mb-10 ml-6 experience-item js-hidden translate-x-10 relative">
+                <span class="absolute flex items-center justify-center w-10 h-10 bg-dark-surface rounded-full -left-5 ring-4 ring-dark-deeper border border-neon-blue">
+                    <svg class="w-6 h-6 text-neon-blue stroke-draw" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                    </svg>
+                </span>
+                <div class="glass-card p-6 rounded-lg ml-4 hover:border-neon-blue">
+                    <div class="flex flex-wrap justify-between items-center mb-2">
+                        <h3 class="flex items-center text-xl font-semibold text-white">Research Intern <span class="text-neon-blue text-sm ml-3 border border-neon-blue px-2 rounded">IISc, Bangalore</span></h3>
+                        <time class="text-sm font-mono text-gray-400">May '25 - July '25</time>
+                    </div>
+                    <ul class="list-disc list-inside text-gray-400 text-sm space-y-2 marker:text-neon-blue">
+                        <li>Designed <span class="text-white">Diffusion-based 3D Models</span> for heart nodule segmentation.</li>
+                        <li>Achieved 0.85 Dice accuracy (SOTA).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="mb-10 ml-6 experience-item js-hidden translate-x-10 relative">
+                <span class="absolute flex items-center justify-center w-10 h-10 bg-dark-surface rounded-full -left-5 ring-4 ring-dark-deeper border border-neon-purple">
+                    <svg class="w-6 h-6 text-neon-purple stroke-draw" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                    </svg>
+                </span>
+                <div class="glass-card p-6 rounded-lg ml-4 hover:border-neon-purple">
+                    <div class="flex flex-wrap justify-between items-center mb-2">
+                        <h3 class="flex items-center text-xl font-semibold text-white">AI/ML Intern <span class="text-neon-purple text-sm ml-3 border border-neon-purple px-2 rounded">GTRE</span></h3>
+                        <time class="text-sm font-mono text-gray-400">June '24 - July '24</time>
+                    </div>
+                    <ul class="list-disc list-inside text-gray-400 text-sm space-y-2 marker:text-neon-purple">
+                        <li>Built AI virtual sensors for gas turbine health (LCA engines).</li>
+                        <li>Ensembled RNN/LSTM/XGBoost models for multi-sensor failures.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 px-4 max-w-6xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-12 flex items-center">
+            <span class="text-neon-purple mr-4 font-mono">02.</span> Projects
+            <span class="ml-4 h-px bg-gray-700 flex-grow max-w-xs"></span>
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="projects-grid">
+            
+            <!-- Project 1 -->
+            <!-- Link to Repo: Updated href below -->
+            <a href="https://github.com/Adiz2115" target="_blank" class="block project-card glass-card rounded-xl overflow-hidden js-hidden border border-white/5 hover:border-neon-blue/50 group transform transition-all duration-300">
+                <div class="p-8">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="p-3 bg-neon-blue/10 rounded-lg text-neon-blue">
+                           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <span class="text-xs font-mono text-gray-500 group-hover:text-neon-blue">View Code ↗</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-neon-blue">Dental Implant Planning AI</h3>
+                    <p class="text-gray-400 text-sm mb-4">Deep Learning on CT Images. SegResNet for precise bone structure.</p>
+                </div>
+            </a>
+
+            <!-- Project 2 -->
+             <a href="https://github.com/Adiz2115" target="_blank" class="block project-card glass-card rounded-xl overflow-hidden js-hidden border border-white/5 hover:border-neon-purple/50 group transform transition-all duration-300">
+                <div class="p-8">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="p-3 bg-neon-purple/10 rounded-lg text-neon-purple">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        </div>
+                        <span class="text-xs font-mono text-gray-500 group-hover:text-neon-purple">View Code ↗</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-neon-purple">NotesLLM (RAG)</h3>
+                    <p class="text-gray-400 text-sm mb-4">RAG pipeline with LangChain & TinyLlama to summarize PDFs.</p>
+                </div>
+            </a>
+            
+             <!-- Project 3 -->
+             <a href="https://github.com/Adiz2115" target="_blank" class="block project-card glass-card rounded-xl overflow-hidden js-hidden border border-white/5 hover:border-neon-blue/50 group transform transition-all duration-300">
+                <div class="p-8">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="p-3 bg-neon-blue/10 rounded-lg text-neon-blue">
+                             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <span class="text-xs font-mono text-gray-500 group-hover:text-neon-blue">View Code ↗</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-neon-blue">Sentiment Analysis BERT</h3>
+                    <p class="text-gray-400 text-sm mb-4">Fine-tuned BERT LLM on Sentiment140 dataset. Deployed via Gradio.</p>
+                </div>
+            </a>
+            
+             <!-- Project 4 -->
+             <a href="https://github.com/Adiz2115" target="_blank" class="block project-card glass-card rounded-xl overflow-hidden js-hidden border border-white/5 hover:border-neon-purple/50 group transform transition-all duration-300">
+                <div class="p-8">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="p-3 bg-neon-purple/10 rounded-lg text-neon-purple">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
+                        </div>
+                        <span class="text-xs font-mono text-gray-500 group-hover:text-neon-purple">View Code ↗</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-neon-purple">Brain Tumour Detection</h3>
+                    <p class="text-gray-400 text-sm mb-4">3D SegResNet and Diffusion Models for MRI segmentation.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Skills Section with Motion Path -->
+    <section class="py-20 px-4 bg-white/5 relative overflow-hidden" id="skills-section">
+        <!-- SVG Path for Motion Animation -->
+        <svg class="absolute w-full h-full top-0 left-0 pointer-events-none opacity-30" viewBox="0 0 1000 300" preserveAspectRatio="none">
+            <path id="motionPath" class="circuit-path" d="M0,150 C200,150 200,50 400,50 C600,50 600,250 800,250 C900,250 1000,150 1000,150" />
+            <circle id="motionObject" r="6" class="circuit-marker" cx="0" cy="0" />
+        </svg>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h2 class="text-2xl font-bold text-white mb-8">Tech Stack & Tools</h2>
+            <div class="flex flex-wrap justify-center gap-4" id="skills-cloud">
+                <span class="skill-tag px-4 py-2 border border-neon-blue text-neon-blue rounded-full text-sm font-mono cursor-default bg-dark-surface/50">Python</span>
+                <span class="skill-tag px-4 py-2 border border-gray-600 text-gray-300 rounded-full text-sm font-mono cursor-default bg-dark-surface/50">C++</span>
+                <span class="skill-tag px-4 py-2 border border-neon-purple text-neon-purple rounded-full text-sm font-mono cursor-default bg-dark-surface/50">TensorFlow</span>
+                <span class="skill-tag px-4 py-2 border border-neon-purple text-neon-purple rounded-full text-sm font-mono cursor-default bg-dark-surface/50">PyTorch</span>
+                <span class="skill-tag px-4 py-2 border border-gray-600 text-gray-300 rounded-full text-sm font-mono cursor-default bg-dark-surface/50">LangChain</span>
+                <span class="skill-tag px-4 py-2 border border-gray-600 text-gray-300 rounded-full text-sm font-mono cursor-default bg-dark-surface/50">Docker</span>
+                <span class="skill-tag px-4 py-2 border border-gray-600 text-gray-300 rounded-full text-sm font-mono cursor-default bg-dark-surface/50">CUDA</span>
+                <span class="skill-tag px-4 py-2 border border-gray-600 text-gray-300 rounded-full text-sm font-mono cursor-default bg-dark-surface/50">Git</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Contact with Grid Ripple Stagger -->
+    <section id="contact" class="py-24 px-4 text-center relative overflow-hidden">
+        <div id="stagger-grid" class="absolute inset-0 z-0 stagger-grid"></div>
+
+        <div class="relative z-10 pointer-events-none">
+            <h2 class="text-4xl font-bold text-white mb-6 pointer-events-auto">Get In Touch</h2>
+            <p class="text-gray-400 max-w-lg mx-auto mb-10 pointer-events-auto">
+                I'm currently looking for new opportunities in AI/ML research and engineering. 
+            </p>
+            <div class="flex justify-center gap-6 pointer-events-auto">
+                <a href="mailto:adithyar2115@gmail.com" class="anime-btn text-white hover:text-neon-blue transition-colors p-2">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                </a>
+                <a href="https://github.com/Adiz2115" target="_blank" class="anime-btn text-white hover:text-neon-purple transition-colors p-2">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </a>
+                <a href="https://linkedin.com/in/adithya-r-094507280" target="_blank" class="anime-btn text-white hover:text-blue-500 transition-colors p-2">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+            </div>
+            <div class="mt-12 text-sm text-gray-600 pointer-events-auto">
+                <p>Designed & Built by Adithya R</p>
+                <p class="text-xs mt-2 opacity-50">Click background to trigger grid ripple</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Anime.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. Robust Hero Text Initialization ---
+            const heroTitle = document.getElementById('hero-title');
+            if(heroTitle) {
+                const text = heroTitle.innerText.trim();
+                heroTitle.innerHTML = '';
+                text.split('').forEach(char => {
+                    let span = document.createElement('span');
+                    span.innerText = char === ' ' ? '\u00A0' : char;
+                    span.classList.add('hero-text-char');
+                    heroTitle.appendChild(span);
+                });
+            }
+
+            // --- 2. Main Timeline ---
+            var timeline = anime.timeline({
+                easing: 'easeOutExpo',
+                duration: 1000
+            });
+
+            timeline
+            .add({
+                targets: '.logo-svg path',
+                strokeDashoffset: [anime.setDashoffset, 0],
+                easing: 'easeInOutSine',
+                duration: 1500,
+                delay: function(el, i) { return i * 250 },
+                direction: 'alternate',
+                loop: false
+            })
+            .add({
+                targets: '.hero-line h2, .hero-line p',
+                translateY: [50, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(200),
+            }, '-=1000')
+            .add({
+                targets: '#hero-title span',
+                opacity: [0, 1],
+                translateY: [-20, 0],
+                color: ['#00f3ff', '#ffffff'],
+                delay: anime.stagger(50),
+            }, '-=800')
+            .add({
+                targets: '.hero-btns',
+                translateY: [20, 0],
+                opacity: [0, 1]
+            }, '-=500');
+
+            // --- 3. Scroll Animations (Enter & Exit) ---
+            // Using IntersectionObserver with Logic to reset animation when out of view
+            const scrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Element enters viewport -> Animate In
+                        if (entry.target.classList.contains('experience-item')) {
+                            anime({
+                                targets: entry.target,
+                                translateX: [50, 0],
+                                opacity: [0, 1],
+                                easing: 'easeOutQuad',
+                                delay: 200
+                            });
+                        } 
+                        else if (entry.target.classList.contains('project-card')) {
+                            anime({
+                                targets: entry.target,
+                                translateY: [50, 0],
+                                opacity: [0, 1],
+                                easing: 'easeOutQuad',
+                                delay: 200 // Simple delay, staggering handled by CSS order mostly in this simple logic
+                            });
+                        }
+                    } else {
+                        // Element leaves viewport -> Animate Out (Reset)
+                        // This enables the "Up and Down" animation effect
+                        anime({
+                            targets: entry.target,
+                            opacity: 0,
+                            easing: 'linear',
+                            duration: 200
+                        });
+                    }
+                });
+            }, { threshold: 0.15 }); // 15% visibility triggers it
+
+            document.querySelectorAll('.experience-item').forEach(el => scrollObserver.observe(el));
+            document.querySelectorAll('.project-card').forEach(el => scrollObserver.observe(el));
+
+
+            // --- 4. Elastic Button Physics (Fixed) ---
+            document.querySelectorAll('.anime-btn').forEach(btn => {
+                btn.addEventListener('mouseenter', () => {
+                    anime.remove(btn);
+                    anime({
+                        targets: btn,
+                        scale: 1.1,
+                        duration: 800,
+                        easing: 'easeOutElastic(1, .5)' // Correct Anime.js v3 elastic easing
+                    });
+                });
+                btn.addEventListener('mouseleave', () => {
+                    anime.remove(btn);
+                    anime({
+                        targets: btn,
+                        scale: 1,
+                        duration: 600,
+                        easing: 'easeOutElastic(1, .5)'
+                    });
+                });
+            });
+
+            // --- 5. Background Morphing ---
+            anime({
+                targets: '#morph-shape',
+                d: [
+                    { value: 'M43.9,-76.3C57.4,-69.3,69.1,-59.5,77.7,-47.8C86.3,-36.1,91.8,-22.4,90.4,-9.1C89,4.2,80.7,17.1,72.4,29.3C64.1,41.5,55.8,53,45.4,62.3C35,71.6,22.5,78.7,9.3,80.8C-3.9,82.9,-17.8,80,-30.7,73.8C-43.6,67.6,-55.5,58.1,-64.8,46.8C-74.1,35.5,-80.8,22.4,-82.1,8.9C-83.4,-4.6,-79.3,-18.5,-71.4,-30.3C-63.5,-42.1,-51.8,-51.8,-39.8,-59.3C-27.8,-66.8,-15.5,-72.1,-1.2,-74.2C13.1,-76.3,26.2,-75.2,43.9,-76.3Z' },
+                    { value: 'M48.1,-73.4C61.4,-66.7,70.9,-54.1,77.6,-40.9C84.3,-27.7,88.2,-13.9,85.1,-1.8C82,10.3,71.9,20.6,62.5,30.3C53.1,40,44.4,49.1,34.2,56.5C24,63.9,12,69.6,0.3,69.2C-11.5,68.7,-22.9,62.1,-33.9,55.1C-44.9,48.1,-55.5,40.7,-64.1,30.8C-72.7,20.9,-79.3,8.5,-78.2,-3.3C-77.1,-15.1,-68.3,-26.3,-58.5,-35.6C-48.7,-44.9,-37.9,-52.3,-26.4,-59.8C-14.9,-67.3,-2.7,-74.9,10.2,-76.5C23.1,-78.1,34.8,-80.1,48.1,-73.4Z' }
+                ],
+                duration: 4000,
+                direction: 'alternate',
+                loop: true,
+                easing: 'easeInOutSine'
+            });
+
+            // --- 6. Motion Path ---
+            var path = anime.path('#motionPath');
+            anime({
+                targets: '#motionObject',
+                translateX: path('x'),
+                translateY: path('y'),
+                rotate: path('angle'),
+                easing: 'linear',
+                duration: 10000,
+                loop: true
+            });
+
+            // --- 7. Grid Ripple ---
+            const gridContainer = document.getElementById('stagger-grid');
+            if(gridContainer) {
+                const gridCols = Math.floor(window.innerWidth / 45);
+                const gridRows = 6;
+                const totalCells = gridCols * gridRows;
+                gridContainer.style.gridTemplateColumns = `repeat(${gridCols}, 1fr)`;
+
+                for (let i = 0; i < totalCells; i++) {
+                    let cell = document.createElement('div');
+                    cell.classList.add('stagger-cell');
+                    gridContainer.appendChild(cell);
+                }
+
+                gridContainer.addEventListener('click', function() {
+                    anime({
+                        targets: '.stagger-cell',
+                        scale: [
+                            {value: .1, easing: 'easeOutSine', duration: 500},
+                            {value: 1, easing: 'easeInOutQuad', duration: 1200}
+                        ],
+                        delay: anime.stagger(100, {grid: [gridCols, gridRows], from: 'center'}),
+                        backgroundColor: '#00f3ff'
+                    });
+                });
+            }
+
+            // --- 8. Background Particles ---
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                let particle = document.createElement('div');
+                particle.classList.add('absolute', 'bg-neon-blue', 'rounded-full', 'opacity-20');
+                let size = Math.random() * 4 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                particlesContainer.appendChild(particle);
+
+                anime({
+                    targets: particle,
+                    top: [
+                        { value: Math.random() * 100 + 'vh', duration: Math.random() * 10000 + 5000 },
+                        { value: Math.random() * 100 + 'vh', duration: Math.random() * 10000 + 5000 }
+                    ],
+                    opacity: [{ value: 0 }, { value: 0.4 }, { value: 0 }],
+                    easing: 'linear',
+                    loop: true
+                });
+            }
+            
+            // --- 9. Scroll Parallax ---
+            window.addEventListener('scroll', () => {
+                const scrollPercent = window.pageYOffset / document.body.scrollHeight;
+                anime.set('#particles', { translateY: scrollPercent * 200 });
+                anime.set('.grid-bg', { translateY: -scrollPercent * 100 });
+            });
+        });
+    </script>
+</body>
+</html>
