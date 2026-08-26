@@ -147,6 +147,7 @@
         <a href="#experience"   class="rail-item flex items-center gap-3 justify-end"><span class="rail-label">Experience</span><span class="rail-dot"></span></a>
         <a href="#projects"     class="rail-item flex items-center gap-3 justify-end"><span class="rail-label">Projects</span><span class="rail-dot"></span></a>
         <a href="#skills"       class="rail-item flex items-center gap-3 justify-end"><span class="rail-label">Stack</span><span class="rail-dot"></span></a>
+        <a href="#education"    class="rail-item flex items-center gap-3 justify-end"><span class="rail-label">Education</span><span class="rail-dot"></span></a>
         <a href="#achievements" class="rail-item flex items-center gap-3 justify-end"><span class="rail-label">Awards</span><span class="rail-dot"></span></a>
         <a href="#contact"      class="rail-item flex items-center gap-3 justify-end"><span class="rail-label">Contact</span><span class="rail-dot"></span></a>
     </div>
@@ -181,6 +182,7 @@
             <li><a href="#experience" class="block py-1">Experience</a></li>
             <li><a href="#projects" class="block py-1">Projects</a></li>
             <li><a href="#skills" class="block py-1">Stack</a></li>
+            <li><a href="#education" class="block py-1">Education</a></li>
             <li><a href="#achievements" class="block py-1">Achievements</a></li>
             <li><a href="#contact" class="block py-1">Contact</a></li>
         </ul>
@@ -196,15 +198,20 @@
                 4th-year Electrical &amp; Electronics Engineering student at <span class="text-white">NIT Calicut</span>,
                 currently on student exchange at <span class="text-white">IIT Delhi</span>.
             </p>
-            <p class="reveal text-gray-500 text-sm md:text-base mb-9">
+            <p class="reveal text-gray-500 text-sm md:text-base mb-6">
                 I work on LLM agents, reinforcement learning and 3D medical vision — from prompt
                 optimizers  to  diffusion segmentation models.
+            </p>
+
+            <p class="reveal font-mono text-xs md:text-sm text-neon-amber mb-9">
+                Available Jan — Jun 2027
             </p>
 
             <div class="reveal flex flex-wrap justify-center lg:justify-start gap-3 mb-10 font-mono text-xs">
                 <span class="tag px-3 py-1.5 rounded-full text-gray-300">Exchange @ IIT Delhi</span>
                 <span class="tag px-3 py-1.5 rounded-full text-gray-300">IBM Research</span>
                 <span class="tag px-3 py-1.5 rounded-full text-gray-300">IISc Bangalore</span>
+                <span class="tag px-3 py-1.5 rounded-full text-gray-300">GTRE / DRDO</span>
                 <span class="tag px-3 py-1.5 rounded-full text-gray-300">KVPY Scholar</span>
             </div>
 
@@ -238,9 +245,10 @@
                     </div>
                     <p class="text-neon-blue font-mono text-sm mb-4">IBM Research, Gurgaon</p>
                     <ul class="list-disc list-outside ml-4 text-gray-400 text-sm space-y-2 marker:text-neon-blue">
-                        <li>Optimizing AI agents for multi-turn tasks by baking domain knowledge into model weights via reinforcement learning (<span class="text-white">self-behavioral distillation</span>).</li>
-                        <li>Applied prompt-optimization methods (GEPA, ACE) and generated synthetic benchmarks and datasets for DPO-based learning.</li>
-                        <li>Built <span class="text-white">CRPO — Compressed Repair Prompt Optimizer</span>, a novel prompt-optimization approach that beats GEPA by nearly 2×.</li>
+                        <li>Optimized LLM agents for multi-turn, tool-calling tasks: discovered high-value policies via automatic prompt optimization, then internalised them into model weights through DPO / <span class="text-white">self-behavioral distillation</span> — removing the need to carry the policy in context.</li>
+                        <li>Designed <span class="text-white">CRPO (Compressed Repair Prompt Optimizer)</span>, a novel prompt optimizer: raised <span class="text-white">AppWorld</span> Task Goal Completion from <span class="text-white">32.7 to 37.2</span> vs. 34.9 for GEPA — <span class="text-white">2× the gain</span> of the leading prior method; also benchmarked against ACE.</li>
+                        <li><span class="text-white">DPO (LoRA)</span> post-training on synthetic preference data: average reward <span class="text-white">0.27 → 0.53 (+96%)</span> with no policy in context, beating the 0.50 obtained by prompting the baseline with the full policy.</li>
+                        <li>Built the <span class="text-white">multi-agent evaluation harness</span> — user-simulator agent, orchestrator and sandboxed tool environments.</li>
                     </ul>
                 </div>
             </article>
@@ -257,6 +265,7 @@
                         <li>Worked under Prof. Jayaprakash (IAP Dept.) on coronary artery calcium (CAC) scoring for heart health.</li>
                         <li>Designed <span class="text-white">diffusion-based 3D probabilistic models</span> to segment tiny calcification nodules within the heart.</li>
                         <li>Reached <span class="text-white">0.87 Dice</span> — on par with SOTA — while keeping the model under <span class="text-white">3&nbsp;MB</span>.</li>
+                        <li>Trained and profiled on <span class="text-white">multi-GPU HPC clusters</span> in PyTorch.</li>
                     </ul>
                 </div>
             </article>
@@ -268,10 +277,10 @@
                         <h3 class="text-xl font-semibold text-white">AI/ML Intern</h3>
                         <time class="font-mono text-xs text-gray-500">June 2024 — July 2024</time>
                     </div>
-                    <p class="text-neon-amber font-mono text-sm mb-4">GTRE (Gas Turbine Research Establishment)</p>
+                    <p class="text-neon-amber font-mono text-sm mb-4">GTRE (Gas Turbine Research Establishment), DRDO</p>
                     <ul class="list-disc list-outside ml-4 text-gray-400 text-sm space-y-2 marker:text-neon-amber">
-                        <li>Built AI <span class="text-white">virtual sensors</span> for gas-turbine health monitoring in LCA engines — a multivariate time-series problem.</li>
-                        <li>Developed an RNN/LSTM/XGBoost ensemble to survive multi-sensor failures and improve engine health prediction.</li>
+                        <li>Built AI <span class="text-white">virtual sensors</span> for gas-turbine health monitoring in LCA engines — over noisy, high-frequency multivariate time-series telemetry.</li>
+                        <li>Developed an <span class="text-white">RNN/LSTM/XGBoost ensemble</span> robust to multi-sensor dropout, improving engine health prediction.</li>
                     </ul>
                 </div>
             </article>
@@ -287,6 +296,46 @@
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <a href="https://github.com/Adiz2115/kade" target="_blank" rel="noopener"
+               class="reveal glass rounded-xl p-7 group hover:border-neon-blue/40 hover:-translate-y-1 transition-all duration-300">
+                <div class="flex justify-between items-start mb-5">
+                    <span class="px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider bg-neon-blue/10 text-neon-blue">2026</span>
+                    <span class="text-[10px] font-mono text-gray-600 group-hover:text-neon-blue transition-colors">repo ↗</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-blue transition-colors">kade — Agentic CLI Harness</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                    Terminal agent that turns natural language into shell commands. A planner proposes, a separate
+                    verifier checks intent, and a deterministic safety classifier gates every command — so even a
+                    malicious planner is blocked before the human ever sees it.
+                </p>
+                <div class="flex flex-wrap gap-2 font-mono text-[10px] text-gray-500">
+                    <span class="tag px-2 py-1 rounded">Multi-Agent</span>
+                    <span class="tag px-2 py-1 rounded">Safety Classifier</span>
+                    <span class="tag px-2 py-1 rounded">Ollama</span>
+                    <span class="tag px-2 py-1 rounded">Python</span>
+                </div>
+            </a>
+
+            <a href="https://github.com/Adiz2115/earner" target="_blank" rel="noopener"
+               class="reveal glass rounded-xl p-7 group hover:border-neon-amber/40 hover:-translate-y-1 transition-all duration-300">
+                <div class="flex justify-between items-start mb-5">
+                    <span class="px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider bg-neon-amber/10 text-neon-amber">2026</span>
+                    <span class="text-[10px] font-mono text-gray-600 group-hover:text-neon-amber transition-colors">repo ↗</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-amber transition-colors">earner — Systematic Equity Trading (NSE)</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                    End-to-end medium-frequency pipeline for NSE equities — LightGBM excess-return model, signal
+                    blending and an event-driven backtester, validated with purged walk-forward CV and a full
+                    Indian transaction-cost model.
+                </p>
+                <div class="flex flex-wrap gap-2 font-mono text-[10px] text-gray-500">
+                    <span class="tag px-2 py-1 rounded">LightGBM</span>
+                    <span class="tag px-2 py-1 rounded">Walk-Forward CV</span>
+                    <span class="tag px-2 py-1 rounded">Backtesting</span>
+                    <span class="tag px-2 py-1 rounded">Quant</span>
+                </div>
+            </a>
 
             <a href="https://github.com/Adiz2115" target="_blank" rel="noopener"
                class="reveal glass rounded-xl p-7 group hover:border-neon-blue/40 hover:-translate-y-1 transition-all duration-300">
@@ -314,9 +363,9 @@
                 </div>
                 <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-purple transition-colors">MagNet Challenge 2</h3>
                 <p class="text-gray-400 text-sm leading-relaxed mb-4">
-                    Princeton-hosted challenge on modelling non-linear B–H characteristics under varying frequency
+                    Princeton-hosted challenge on modelling non-linear B–H hysteresis under varying frequency
                     excitation. Built a physics-informed Mixture-of-Experts with multiple LSTM encoders, multi-head
-                    cross-attention and temperature conditioning for magnetic hysteresis dynamics.
+                    cross-attention and temperature conditioning, <span class="text-white">gated across operating regimes</span>.
                 </p>
                 <div class="flex flex-wrap gap-2 font-mono text-[10px] text-gray-500">
                     <span class="tag px-2 py-1 rounded">MoE</span>
@@ -325,25 +374,26 @@
                 </div>
             </a>
 
-            <a href="https://github.com/Adiz2115" target="_blank" rel="noopener"
+            <a href="https://huggingface.co/spaces/AdithyaR2115/hackpyrag" target="_blank" rel="noopener"
                class="reveal glass rounded-xl p-7 group hover:border-neon-blue/40 hover:-translate-y-1 transition-all duration-300">
                 <div class="flex justify-between items-start mb-5">
                     <span class="px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider bg-white/5 text-gray-400">Jan — Feb 2025</span>
-                    <span class="text-[10px] font-mono text-gray-600 group-hover:text-neon-blue transition-colors">repo ↗</span>
+                    <span class="text-[10px] font-mono text-gray-600 group-hover:text-neon-blue transition-colors">demo ↗</span>
                 </div>
                 <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-blue transition-colors">NotesLLM</h3>
                 <p class="text-gray-400 text-sm leading-relaxed mb-4">
-                    RAG pipeline built on LangChain + TinyLlama (1B) for question-answering over long-context PDFs,
-                    backed by a vector database.
+                    Long-context RAG pipeline built on LangChain + TinyLlama (1B) for question-answering over PDFs,
+                    backed by <span class="text-white">FAISS with HNSW</span> and deployed on Hugging Face Spaces.
                 </p>
                 <div class="flex flex-wrap gap-2 font-mono text-[10px] text-gray-500">
                     <span class="tag px-2 py-1 rounded">RAG</span>
                     <span class="tag px-2 py-1 rounded">LangChain</span>
-                    <span class="tag px-2 py-1 rounded">Vector DB</span>
+                    <span class="tag px-2 py-1 rounded">FAISS / HNSW</span>
+                    <span class="tag px-2 py-1 rounded">HF Spaces</span>
                 </div>
             </a>
 
-            <a href="https://github.com/Adiz2115" target="_blank" rel="noopener"
+            <a href="https://github.com/Adiz2115/Brain-Tumour-Segmentation" target="_blank" rel="noopener"
                class="reveal glass rounded-xl p-7 group hover:border-neon-purple/40 hover:-translate-y-1 transition-all duration-300">
                 <div class="flex justify-between items-start mb-5">
                     <span class="px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider bg-white/5 text-gray-400">Dec 2024 — Mar 2025</span>
@@ -361,7 +411,7 @@
                 </div>
             </a>
 
-            <a href="https://github.com/Adiz2115" target="_blank" rel="noopener"
+            <a href="https://github.com/Adiz2115/SentimentAnalysis" target="_blank" rel="noopener"
                class="reveal glass rounded-xl p-7 group hover:border-neon-amber/40 hover:-translate-y-1 transition-all duration-300 md:col-span-2">
                 <div class="flex justify-between items-start mb-5">
                     <span class="px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider bg-white/5 text-gray-400">Sept — Nov 2024</span>
@@ -389,31 +439,59 @@
             <span class="h-px bg-white/10 flex-grow"></span>
         </h2>
 
+        <div class="reveal glass rounded-xl p-6 mb-6">
+            <h3 class="font-mono text-neon-blue text-sm uppercase tracking-widest mb-4">Agentic AI &amp; LLMs</h3>
+            <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-300">
+                <span class="tag px-3 py-1.5 rounded-full">Claude Code &amp; Agent Skills</span>
+                <span class="tag px-3 py-1.5 rounded-full">Multi-Agent Systems</span>
+                <span class="tag px-3 py-1.5 rounded-full">Planner–Verifier</span>
+                <span class="tag px-3 py-1.5 rounded-full">Tool-Calling</span>
+                <span class="tag px-3 py-1.5 rounded-full">MCP</span>
+                <span class="tag px-3 py-1.5 rounded-full">Sandboxed Tools</span>
+                <span class="tag px-3 py-1.5 rounded-full">GEPA / ACE / CRPO</span>
+                <span class="tag px-3 py-1.5 rounded-full">RAG</span>
+                <span class="tag px-3 py-1.5 rounded-full">LangChain</span>
+                <span class="tag px-3 py-1.5 rounded-full">DPO / LoRA</span>
+                <span class="tag px-3 py-1.5 rounded-full">RL Distillation</span>
+                <span class="tag px-3 py-1.5 rounded-full">vLLM</span>
+                <span class="tag px-3 py-1.5 rounded-full">Hugging Face</span>
+            </div>
+        </div>
+
         <div class="grid md:grid-cols-3 gap-6">
             <div class="reveal glass rounded-xl p-6">
-                <h3 class="font-mono text-neon-blue text-sm uppercase tracking-widest mb-4">Programming</h3>
+                <h3 class="font-mono text-neon-blue text-sm uppercase tracking-widest mb-4">Programming &amp; Tools</h3>
                 <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-300">
                     <span class="tag px-3 py-1.5 rounded-full">Python</span>
                     <span class="tag px-3 py-1.5 rounded-full">C++ / DSA</span>
+                    <span class="tag px-3 py-1.5 rounded-full">Bash</span>
                     <span class="tag px-3 py-1.5 rounded-full">CUDA</span>
                     <span class="tag px-3 py-1.5 rounded-full">Verilog</span>
                     <span class="tag px-3 py-1.5 rounded-full">RISC Assembly</span>
+                    <span class="tag px-3 py-1.5 rounded-full">MATLAB</span>
+                    <span class="tag px-3 py-1.5 rounded-full">Linux</span>
+                    <span class="tag px-3 py-1.5 rounded-full">Git</span>
+                    <span class="tag px-3 py-1.5 rounded-full">Docker</span>
+                    <span class="tag px-3 py-1.5 rounded-full">pytest</span>
+                    <span class="tag px-3 py-1.5 rounded-full">LaTeX</span>
                 </div>
             </div>
 
             <div class="reveal glass rounded-xl p-6">
-                <h3 class="font-mono text-neon-purple text-sm uppercase tracking-widest mb-4">Frameworks &amp; Tools</h3>
+                <h3 class="font-mono text-neon-purple text-sm uppercase tracking-widest mb-4">ML &amp; Statistics</h3>
                 <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-300">
                     <span class="tag px-3 py-1.5 rounded-full">PyTorch</span>
                     <span class="tag px-3 py-1.5 rounded-full">TensorFlow</span>
-                    <span class="tag px-3 py-1.5 rounded-full">LangChain</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Docker</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Git</span>
-                    <span class="tag px-3 py-1.5 rounded-full">MATLAB</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Jupyter</span>
-                    <span class="tag px-3 py-1.5 rounded-full">LaTeX</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Blender</span>
-                    <span class="tag px-3 py-1.5 rounded-full">CAD</span>
+                    <span class="tag px-3 py-1.5 rounded-full">LightGBM</span>
+                    <span class="tag px-3 py-1.5 rounded-full">XGBoost</span>
+                    <span class="tag px-3 py-1.5 rounded-full">scikit-learn</span>
+                    <span class="tag px-3 py-1.5 rounded-full">Transformers</span>
+                    <span class="tag px-3 py-1.5 rounded-full">Diffusion Models</span>
+                    <span class="tag px-3 py-1.5 rounded-full">CNNs</span>
+                    <span class="tag px-3 py-1.5 rounded-full">RNN / LSTM / GRU</span>
+                    <span class="tag px-3 py-1.5 rounded-full">Attention &amp; MoE</span>
+                    <span class="tag px-3 py-1.5 rounded-full">Purged Walk-Forward CV</span>
+                    <span class="tag px-3 py-1.5 rounded-full">Ablation Analysis</span>
                 </div>
             </div>
 
@@ -426,16 +504,79 @@
                     <span class="tag px-3 py-1.5 rounded-full">3D Medical Vision</span>
                     <span class="tag px-3 py-1.5 rounded-full">Time Series</span>
                     <span class="tag px-3 py-1.5 rounded-full">GPU Architecture</span>
+                    <span class="tag px-3 py-1.5 rounded-full">Multi-GPU HPC</span>
+                    <span class="tag px-3 py-1.5 rounded-full">Deployment &amp; Monitoring</span>
+                    <span class="tag px-3 py-1.5 rounded-full">Streamlit</span>
+                    <span class="tag px-3 py-1.5 rounded-full">Gradio</span>
+                    <span class="tag px-3 py-1.5 rounded-full">Blender</span>
+                    <span class="tag px-3 py-1.5 rounded-full">CAD</span>
                 </div>
+            </div>
+        </div>
+
+        <div class="reveal glass rounded-xl p-6 mt-6">
+            <h3 class="font-mono text-neon-purple text-sm uppercase tracking-widest mb-4">Relevant Coursework</h3>
+            <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-300">
+                <span class="tag px-3 py-1.5 rounded-full">Predictive &amp; Generative AI (Minor)</span>
+                <span class="tag px-3 py-1.5 rounded-full">Machine Learning</span>
+                <span class="tag px-3 py-1.5 rounded-full">Neural Networks &amp; Deep Learning</span>
+                <span class="tag px-3 py-1.5 rounded-full">Foundations of Data Science</span>
+                <span class="tag px-3 py-1.5 rounded-full">Computer Architecture</span>
+                <span class="tag px-3 py-1.5 rounded-full">Signals &amp; Systems</span>
             </div>
         </div>
 
     </section>
 
     <!-- Achievements -->
+    <section id="education" class="py-28 px-5 max-w-5xl mx-auto">
+        <h2 class="reveal text-3xl md:text-4xl font-bold text-white mb-14 flex items-center gap-4">
+            <span class="text-neon-purple font-mono text-xl">04.</span> Education
+            <span class="h-px bg-white/10 flex-grow"></span>
+        </h2>
+
+        <div class="space-y-4">
+            <div class="reveal glass rounded-xl p-6">
+                <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
+                    <h3 class="text-lg font-semibold text-white">B.Tech (Exchange)</h3>
+                    <time class="font-mono text-xs text-gray-500">2026 — 2027</time>
+                </div>
+                <p class="text-neon-purple font-mono text-sm">IIT Delhi — Final Year Exchange Student</p>
+            </div>
+
+            <div class="reveal glass rounded-xl p-6">
+                <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
+                    <h3 class="text-lg font-semibold text-white">B.Tech, Electrical &amp; Electronics Engineering</h3>
+                    <time class="font-mono text-xs text-gray-500">2023 — 2027</time>
+                </div>
+                <p class="text-neon-blue font-mono text-sm mb-2">National Institute of Technology, Calicut</p>
+                <p class="text-gray-400 text-sm">CGPA <span class="text-white">8.97</span> (current).</p>
+            </div>
+
+            <div class="reveal glass rounded-xl p-6">
+                <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
+                    <h3 class="text-lg font-semibold text-white">Senior Secondary</h3>
+                    <time class="font-mono text-xs text-gray-500">2023</time>
+                </div>
+                <p class="text-neon-amber font-mono text-sm mb-2">Oxford Ind. PU College — Karnataka State Board</p>
+                <p class="text-gray-400 text-sm"><span class="text-white">92.83%</span></p>
+            </div>
+
+            <div class="reveal glass rounded-xl p-6">
+                <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
+                    <h3 class="text-lg font-semibold text-white">Secondary</h3>
+                    <time class="font-mono text-xs text-gray-500">2021</time>
+                </div>
+                <p class="text-neon-amber font-mono text-sm mb-2">National Public School, Yeshwanthpur — CBSE</p>
+                <p class="text-gray-400 text-sm"><span class="text-white">96.8%</span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements -->
     <section id="achievements" class="py-28 px-5 max-w-5xl mx-auto">
         <h2 class="reveal text-3xl md:text-4xl font-bold text-white mb-14 flex items-center gap-4">
-            <span class="text-neon-blue font-mono text-xl">04.</span> Achievements
+            <span class="text-neon-blue font-mono text-xl">05.</span> Achievements
             <span class="h-px bg-white/10 flex-grow"></span>
         </h2>
 
@@ -1031,7 +1172,7 @@
         });
 
         // --- Active section tracking for nav + rail ---
-        const sectionIds = ['about', 'experience', 'projects', 'skills', 'achievements', 'contact'];
+        const sectionIds = ['about', 'experience', 'projects', 'skills', 'education', 'achievements', 'contact'];
         const sectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
