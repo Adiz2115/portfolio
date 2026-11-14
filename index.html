@@ -1,1202 +1,269 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adithya R | AI/ML Researcher</title>
-    <meta name="description" content="Adithya R — 4th-year EEE student at NIT Calicut, on exchange at IIT Delhi. AI/ML researcher working on LLM agents, diffusion models and 3D medical segmentation.">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'neon-blue': '#00f3ff',
-                        'neon-purple': '#bc13fe',
-                        'neon-amber': '#ffb020',
-                        'dark-surface': '#101014',
-                        'dark-deeper': '#050507',
-                    },
-                    fontFamily: {
-                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
-                        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-
-    <script type="importmap">
-    {
-        "imports": {
-            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adithya R</title>
+<meta name="description" content="Adithya R — final-year EEE undergraduate at NIT Calicut, on exchange at IIT Delhi. Research on LLM agents and post-training, vector search, efficient inference and 3D medical imaging.">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #1f2328;
+    --muted: #5f6368;
+    --rule: #e3e3e3;
+    --link: #1a5fb4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161719;
+      --text: #e4e4e4;
+      --muted: #9a9ea4;
+      --rule: #2e3034;
+      --link: #78aeed;
     }
-    </script>
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 56px 20px 40px; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
 
-    <style>
-        html { scroll-behavior: smooth; }
-        body {
-            background-color: #050507;
-            color: #d6d6de;
-            overflow-x: hidden;
-        }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #08080c; }
-        ::-webkit-scrollbar-thumb { background: #2a2a34; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #00f3ff; }
+  header h1 { font-size: 30px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.01em; }
+  header .affil { color: var(--muted); margin: 0 0 12px; }
+  .links a + a::before { content: "/"; color: var(--muted); margin: 0 8px; display: inline-block; }
 
-        #scene-canvas {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-        /* Darkens the scene as the die ramps up, so body copy stays legible */
-        #scene-scrim {
-            position: fixed;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            background: #050507;
-            opacity: 0;
-        }
-        /* Vignette + scanline overlay sitting above the WebGL canvas */
-        .scene-veil {
-            position: fixed;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            background:
-                radial-gradient(ellipse at 50% 45%, transparent 30%, rgba(5,5,7,0.55) 78%, rgba(5,5,7,0.92) 100%),
-                repeating-linear-gradient(to bottom, rgba(255,255,255,0.014) 0 1px, transparent 1px 3px);
-        }
-        .content-layer { position: relative; z-index: 2; }
+  section { margin-top: 40px; }
+  h2 {
+    font-size: 19px; font-weight: 600; margin: 0 0 16px;
+    padding-bottom: 6px; border-bottom: 1px solid var(--rule);
+  }
+  p { margin: 0 0 12px; }
 
-        .glass {
-            background: rgba(14, 14, 19, 0.55);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-        }
+  .entry { margin-bottom: 22px; }
+  .entry-head { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .entry-head strong { font-weight: 600; }
+  .date { color: var(--muted); font-size: 14px; white-space: nowrap; }
+  .role { color: var(--muted); font-style: italic; margin: 0; }
+  .entry ul { margin: 6px 0 0; padding-left: 20px; }
+  .entry li { margin-bottom: 4px; }
+  .entry p { margin: 4px 0 0; }
+  .meta { color: var(--muted); font-size: 14px; }
 
-        .reveal {
-            opacity: 0;
-            transform: translateY(28px);
-            transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);
-        }
-        .reveal.visible { opacity: 1; transform: none; }
+  .pubs { list-style: none; padding: 0; margin: 0; }
+  .pubs li { margin-bottom: 16px; }
+  .pubs .title { font-weight: 600; }
+  .pubs .authors, .pubs .venue { display: block; }
+  .pubs .venue { color: var(--muted); font-style: italic; }
+  .pubs .me { font-weight: 600; }
 
-        .nav-link { position: relative; }
-        .nav-link::after {
-            content: ''; position: absolute; left: 0; bottom: 2px;
-            width: 0; height: 1px; background: #00f3ff; transition: width .3s;
-        }
-        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+  dl { margin: 0; display: grid; grid-template-columns: 150px 1fr; gap: 6px 16px; }
+  dt { font-weight: 600; }
+  dd { margin: 0; }
+  @media (max-width: 560px) {
+    main { padding-top: 36px; }
+    dl { grid-template-columns: 1fr; gap: 0; }
+    dd { margin-bottom: 10px; }
+  }
 
-        /* Scroll rail */
-        .rail-dot {
-            width: 6px; height: 6px; border-radius: 9999px;
-            background: #2c2c36; transition: all .35s ease;
-        }
-        .rail-item.on .rail-dot { background: #00f3ff; box-shadow: 0 0 10px #00f3ff; transform: scale(1.6); }
-        .rail-item.on .rail-label { opacity: 1; color: #00f3ff; }
-        .rail-label { opacity: .35; transition: all .35s ease; }
+  ul.plain { padding-left: 20px; margin: 0; }
+  ul.plain li { margin-bottom: 6px; }
 
-        .tag {
-            border: 1px solid rgba(255,255,255,0.12);
-            transition: border-color .25s, color .25s, background-color .25s, transform .25s;
-        }
-        .tag:hover { border-color: #00f3ff; color: #00f3ff; transform: translateY(-2px); }
-
-        .hero-char { display: inline-block; opacity: 0; transform: translateY(-14px); }
-
-        @media (prefers-reduced-motion: reduce) {
-            html { scroll-behavior: auto; }
-            .reveal { opacity: 1; transform: none; transition: none; }
-        }
-    </style>
+  footer { margin-top: 48px; padding-top: 12px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 13px; }
+</style>
 </head>
-<body class="font-sans antialiased selection:bg-neon-blue selection:text-black">
-
-    <canvas id="scene-canvas"></canvas>
-    <div id="scene-scrim"></div>
-    <div class="scene-veil"></div>
-
-    <!-- Throughput HUD -->
-    <div id="hud" class="fixed bottom-5 left-5 z-20 font-mono text-[10px] md:text-xs glass rounded-lg px-4 py-3 hidden md:block">
-        <div class="flex items-center gap-2 mb-2">
-            <span id="hud-led" class="w-1.5 h-1.5 rounded-full bg-neon-blue"></span>
-            <span id="hud-stage" class="text-neon-blue tracking-widest uppercase">Model Graph</span>
-        </div>
-        <div class="text-gray-500">throughput</div>
-        <div><span id="hud-tps" class="text-white text-base">0</span> <span class="text-gray-500">tok/s</span></div>
-        <div class="mt-2 text-gray-500">sm occupancy</div>
-        <div class="w-32 h-1 bg-white/10 rounded overflow-hidden mt-1">
-            <div id="hud-bar" class="h-full w-0 bg-gradient-to-r from-neon-blue to-neon-amber transition-[width] duration-200"></div>
-        </div>
-    </div>
-
-    <!-- Scroll rail -->
-    <div class="fixed right-6 top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col gap-5 font-mono text-[10px] tracking-widest uppercase">
-        <a href="#about"        class="rail-item flex items-center gap-3 justify-end"><span class="rail-label">Intro</span><span class="rail-dot"></span></a>
-        <a href="#experience"   class="rail-item flex items-center gap-3 justify-end"><span class="rail-label">Experience</span><span class="rail-dot"></span></a>
-        <a href="#projects"     class="rail-item flex items-center gap-3 justify-end"><span class="rail-label">Projects</span><span class="rail-dot"></span></a>
-        <a href="#skills"       class="rail-item flex items-center gap-3 justify-end"><span class="rail-label">Stack</span><span class="rail-dot"></span></a>
-        <a href="#education"    class="rail-item flex items-center gap-3 justify-end"><span class="rail-label">Education</span><span class="rail-dot"></span></a>
-        <a href="#achievements" class="rail-item flex items-center gap-3 justify-end"><span class="rail-label">Awards</span><span class="rail-dot"></span></a>
-        <a href="#contact"      class="rail-item flex items-center gap-3 justify-end"><span class="rail-label">Contact</span><span class="rail-dot"></span></a>
-    </div>
-
-    <div class="content-layer">
-
-    <!-- Nav -->
-    <nav class="fixed w-full z-30 top-0 border-b border-white/5 glass">
-        <div class="max-w-6xl mx-auto flex items-center justify-between px-5 py-3">
-            <a href="#" class="flex items-center gap-3 group">
-                <svg class="w-8 h-8 stroke-neon-blue" viewBox="0 0 50 50" fill="none" stroke-width="2">
-                    <path d="M25 5 L5 25 L25 45 L45 25 Z" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M25 16 L16 25 L25 34 L34 25 Z" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span class="text-lg font-semibold text-white tracking-tight">Adithya R</span>
-            </a>
-
-            <ul class="hidden md:flex items-center gap-7 text-sm font-medium text-gray-300">
-                <li><a href="#about" class="nav-link py-1">About</a></li>
-                <li><a href="#experience" class="nav-link py-1">Experience</a></li>
-                <li><a href="#projects" class="nav-link py-1">Projects</a></li>
-                <li><a href="#skills" class="nav-link py-1">Stack</a></li>
-                <li><a href="#contact" class="nav-link py-1">Contact</a></li>
-            </ul>
-
-            <button id="menu-btn" class="md:hidden text-gray-300 p-1" aria-label="Toggle menu">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
-            </button>
-        </div>
-        <ul id="mobile-menu" class="hidden md:hidden border-t border-white/5 px-5 py-3 space-y-2 text-sm text-gray-300">
-            <li><a href="#about" class="block py-1">About</a></li>
-            <li><a href="#experience" class="block py-1">Experience</a></li>
-            <li><a href="#projects" class="block py-1">Projects</a></li>
-            <li><a href="#skills" class="block py-1">Stack</a></li>
-            <li><a href="#education" class="block py-1">Education</a></li>
-            <li><a href="#achievements" class="block py-1">Achievements</a></li>
-            <li><a href="#contact" class="block py-1">Contact</a></li>
-        </ul>
-    </nav>
-
-    <!-- Hero -->
-    <section id="about" class="min-h-screen flex items-center px-5 pt-20">
-        <div class="max-w-6xl mx-auto w-full">
-        <div class="max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
-            <p class="reveal font-mono text-neon-blue text-sm md:text-base mb-4 tracking-wide">&gt; initializing forward pass</p>
-            <h1 id="hero-title" class="text-5xl md:text-7xl font-bold text-white tracking-tight font-mono mb-5">Adithya R</h1>
-            <p class="reveal text-gray-400 text-base md:text-xl leading-relaxed mb-3">
-                4th-year Electrical &amp; Electronics Engineering student at <span class="text-white">NIT Calicut</span>,
-                currently on student exchange at <span class="text-white">IIT Delhi</span>.
-            </p>
-            <p class="reveal text-gray-500 text-sm md:text-base mb-6">
-                I work on LLM agents, reinforcement learning and 3D medical vision — from prompt
-                optimizers  to  diffusion segmentation models.
-            </p>
-
-            <p class="reveal font-mono text-xs md:text-sm text-neon-amber mb-9">
-                Available Jan — Jun 2027
-            </p>
-
-            <div class="reveal flex flex-wrap justify-center lg:justify-start gap-3 mb-10 font-mono text-xs">
-                <span class="tag px-3 py-1.5 rounded-full text-gray-300">Exchange @ IIT Delhi</span>
-                <span class="tag px-3 py-1.5 rounded-full text-gray-300">IBM Research</span>
-                <span class="tag px-3 py-1.5 rounded-full text-gray-300">IISc Bangalore</span>
-                <span class="tag px-3 py-1.5 rounded-full text-gray-300">GTRE / DRDO</span>
-                <span class="tag px-3 py-1.5 rounded-full text-gray-300">KVPY Scholar</span>
-            </div>
-
-            <div class="reveal flex flex-wrap justify-center lg:justify-start gap-4">
-                <a href="#projects" class="px-6 py-3 rounded-lg text-sm font-medium text-black bg-neon-blue hover:bg-white transition-colors">View Projects</a>
-                <a href="#contact" class="px-6 py-3 rounded-lg text-sm font-medium text-white border border-white/15 hover:border-neon-blue hover:text-neon-blue transition-colors">Get in touch</a>
-            </div>
-
-            <div class="reveal mt-16 font-mono text-[10px] text-gray-600 tracking-widest uppercase">
-                scroll to compile ↓
-            </div>
-        </div>
-        </div>
-    </section>
-
-    <!-- Experience -->
-    <section id="experience" class="py-28 px-5 max-w-5xl mx-auto">
-        <h2 class="reveal text-3xl md:text-4xl font-bold text-white mb-14 flex items-center gap-4">
-            <span class="text-neon-blue font-mono text-xl">01.</span> Experience
-            <span class="h-px bg-white/10 flex-grow"></span>
-        </h2>
-
-        <div class="border-l border-white/10 ml-3 space-y-10">
-
-            <article class="reveal relative pl-8 md:pl-10">
-                <span class="absolute -left-[7px] top-2 w-3.5 h-3.5 rounded-full bg-neon-blue ring-4 ring-dark-deeper"></span>
-                <div class="glass rounded-xl p-6 hover:border-neon-blue/40 transition-colors">
-                    <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
-                        <h3 class="text-xl font-semibold text-white">Research Intern</h3>
-                        <time class="font-mono text-xs text-gray-500">May 2026 — July 2026</time>
-                    </div>
-                    <p class="text-neon-blue font-mono text-sm mb-4">IBM Research, Gurgaon</p>
-                    <ul class="list-disc list-outside ml-4 text-gray-400 text-sm space-y-2 marker:text-neon-blue">
-                        <li>Optimized LLM agents for multi-turn, tool-calling tasks: discovered high-value policies via automatic prompt optimization, then internalised them into model weights through DPO / <span class="text-white">self-behavioral distillation</span> — removing the need to carry the policy in context.</li>
-                        <li>Designed <span class="text-white">CRPO (Compressed Repair Prompt Optimizer)</span>, a novel prompt optimizer: raised <span class="text-white">AppWorld</span> Task Goal Completion from <span class="text-white">32.7 to 37.2</span> vs. 34.9 for GEPA — <span class="text-white">2× the gain</span> of the leading prior method; also benchmarked against ACE.</li>
-                        <li><span class="text-white">DPO (LoRA)</span> post-training on synthetic preference data: average reward <span class="text-white">0.27 → 0.53 (+96%)</span> with no policy in context, beating the 0.50 obtained by prompting the baseline with the full policy.</li>
-                        <li>Built the <span class="text-white">multi-agent evaluation harness</span> — user-simulator agent, orchestrator and sandboxed tool environments.</li>
-                    </ul>
-                </div>
-            </article>
-
-            <article class="reveal relative pl-8 md:pl-10">
-                <span class="absolute -left-[7px] top-2 w-3.5 h-3.5 rounded-full bg-neon-purple ring-4 ring-dark-deeper"></span>
-                <div class="glass rounded-xl p-6 hover:border-neon-purple/40 transition-colors">
-                    <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
-                        <h3 class="text-xl font-semibold text-white">Research Intern</h3>
-                        <time class="font-mono text-xs text-gray-500">May 2025 — July 2025</time>
-                    </div>
-                    <p class="text-neon-purple font-mono text-sm mb-4">IISc, Bangalore — FIST Lab</p>
-                    <ul class="list-disc list-outside ml-4 text-gray-400 text-sm space-y-2 marker:text-neon-purple">
-                        <li>Worked under Prof. Jayaprakash (IAP Dept.) on coronary artery calcium (CAC) scoring for heart health.</li>
-                        <li>Designed <span class="text-white">diffusion-based 3D probabilistic models</span> to segment tiny calcification nodules within the heart.</li>
-                        <li>Reached <span class="text-white">0.87 Dice</span> — on par with SOTA — while keeping the model under <span class="text-white">3&nbsp;MB</span>.</li>
-                        <li>Trained and profiled on <span class="text-white">multi-GPU HPC clusters</span> in PyTorch.</li>
-                    </ul>
-                </div>
-            </article>
-
-            <article class="reveal relative pl-8 md:pl-10">
-                <span class="absolute -left-[7px] top-2 w-3.5 h-3.5 rounded-full bg-neon-amber ring-4 ring-dark-deeper"></span>
-                <div class="glass rounded-xl p-6 hover:border-neon-amber/40 transition-colors">
-                    <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
-                        <h3 class="text-xl font-semibold text-white">AI/ML Intern</h3>
-                        <time class="font-mono text-xs text-gray-500">June 2024 — July 2024</time>
-                    </div>
-                    <p class="text-neon-amber font-mono text-sm mb-4">GTRE (Gas Turbine Research Establishment), DRDO</p>
-                    <ul class="list-disc list-outside ml-4 text-gray-400 text-sm space-y-2 marker:text-neon-amber">
-                        <li>Built AI <span class="text-white">virtual sensors</span> for gas-turbine health monitoring in LCA engines — over noisy, high-frequency multivariate time-series telemetry.</li>
-                        <li>Developed an <span class="text-white">RNN/LSTM/XGBoost ensemble</span> robust to multi-sensor dropout, improving engine health prediction.</li>
-                    </ul>
-                </div>
-            </article>
-
-        </div>
-    </section>
-
-    <!-- Projects -->
-    <section id="projects" class="py-28 px-5 max-w-5xl mx-auto">
-        <h2 class="reveal text-3xl md:text-4xl font-bold text-white mb-14 flex items-center gap-4">
-            <span class="text-neon-purple font-mono text-xl">02.</span> Projects
-            <span class="h-px bg-white/10 flex-grow"></span>
-        </h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            <a href="https://github.com/Adiz2115/kade" target="_blank" rel="noopener"
-               class="reveal glass rounded-xl p-7 group hover:border-neon-blue/40 hover:-translate-y-1 transition-all duration-300">
-                <div class="flex justify-between items-start mb-5">
-                    <span class="px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider bg-neon-blue/10 text-neon-blue">2026</span>
-                    <span class="text-[10px] font-mono text-gray-600 group-hover:text-neon-blue transition-colors">repo ↗</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-blue transition-colors">kade — Agentic CLI Harness</h3>
-                <p class="text-gray-400 text-sm leading-relaxed mb-4">
-                    Terminal agent that turns natural language into shell commands. A planner proposes, a separate
-                    verifier checks intent, and a deterministic safety classifier gates every command — so even a
-                    malicious planner is blocked before the human ever sees it.
-                </p>
-                <div class="flex flex-wrap gap-2 font-mono text-[10px] text-gray-500">
-                    <span class="tag px-2 py-1 rounded">Multi-Agent</span>
-                    <span class="tag px-2 py-1 rounded">Safety Classifier</span>
-                    <span class="tag px-2 py-1 rounded">Ollama</span>
-                    <span class="tag px-2 py-1 rounded">Python</span>
-                </div>
-            </a>
-
-            <a href="https://github.com/Adiz2115/earner" target="_blank" rel="noopener"
-               class="reveal glass rounded-xl p-7 group hover:border-neon-amber/40 hover:-translate-y-1 transition-all duration-300">
-                <div class="flex justify-between items-start mb-5">
-                    <span class="px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider bg-neon-amber/10 text-neon-amber">2026</span>
-                    <span class="text-[10px] font-mono text-gray-600 group-hover:text-neon-amber transition-colors">repo ↗</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-amber transition-colors">earner — Systematic Equity Trading (NSE)</h3>
-                <p class="text-gray-400 text-sm leading-relaxed mb-4">
-                    End-to-end medium-frequency pipeline for NSE equities — LightGBM excess-return model, signal
-                    blending and an event-driven backtester, validated with purged walk-forward CV and a full
-                    Indian transaction-cost model.
-                </p>
-                <div class="flex flex-wrap gap-2 font-mono text-[10px] text-gray-500">
-                    <span class="tag px-2 py-1 rounded">LightGBM</span>
-                    <span class="tag px-2 py-1 rounded">Walk-Forward CV</span>
-                    <span class="tag px-2 py-1 rounded">Backtesting</span>
-                    <span class="tag px-2 py-1 rounded">Quant</span>
-                </div>
-            </a>
-
-            <a href="https://github.com/Adiz2115" target="_blank" rel="noopener"
-               class="reveal glass rounded-xl p-7 group hover:border-neon-blue/40 hover:-translate-y-1 transition-all duration-300">
-                <div class="flex justify-between items-start mb-5">
-                    <span class="px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider bg-neon-blue/10 text-neon-blue">Ongoing</span>
-                    <span class="text-[10px] font-mono text-gray-600 group-hover:text-neon-blue transition-colors">repo ↗</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-blue transition-colors">Dental Implant Planning on CT</h3>
-                <p class="text-gray-400 text-sm leading-relaxed mb-4">
-                    Automated deep-learning pipeline for implant planning from jaw CT scans. 3D segmentation
-                    for precise bone-structure and nerve identification, refined with input from practising dentists.
-                </p>
-                <div class="flex flex-wrap gap-2 font-mono text-[10px] text-gray-500">
-                    <span class="tag px-2 py-1 rounded">3D Segmentation</span>
-                    <span class="tag px-2 py-1 rounded">CT Imaging</span>
-                    <span class="tag px-2 py-1 rounded">PyTorch</span>
-                </div>
-            </a>
-
-            <a href="https://github.com/Adiz2115" target="_blank" rel="noopener"
-               class="reveal glass rounded-xl p-7 group hover:border-neon-purple/40 hover:-translate-y-1 transition-all duration-300">
-                <div class="flex justify-between items-start mb-5">
-                    <span class="px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider bg-neon-purple/10 text-neon-purple">Aug 2025 — Jan 2026</span>
-                    <span class="text-[10px] font-mono text-gray-600 group-hover:text-neon-purple transition-colors">repo ↗</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-purple transition-colors">MagNet Challenge 2</h3>
-                <p class="text-gray-400 text-sm leading-relaxed mb-4">
-                    Princeton-hosted challenge on modelling non-linear B–H hysteresis under varying frequency
-                    excitation. Built a physics-informed Mixture-of-Experts with multiple LSTM encoders, multi-head
-                    cross-attention and temperature conditioning, <span class="text-white">gated across operating regimes</span>.
-                </p>
-                <div class="flex flex-wrap gap-2 font-mono text-[10px] text-gray-500">
-                    <span class="tag px-2 py-1 rounded">MoE</span>
-                    <span class="tag px-2 py-1 rounded">Cross-Attention</span>
-                    <span class="tag px-2 py-1 rounded">Physics-Informed</span>
-                </div>
-            </a>
-
-            <a href="https://huggingface.co/spaces/AdithyaR2115/hackpyrag" target="_blank" rel="noopener"
-               class="reveal glass rounded-xl p-7 group hover:border-neon-blue/40 hover:-translate-y-1 transition-all duration-300">
-                <div class="flex justify-between items-start mb-5">
-                    <span class="px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider bg-white/5 text-gray-400">Jan — Feb 2025</span>
-                    <span class="text-[10px] font-mono text-gray-600 group-hover:text-neon-blue transition-colors">demo ↗</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-blue transition-colors">NotesLLM</h3>
-                <p class="text-gray-400 text-sm leading-relaxed mb-4">
-                    Long-context RAG pipeline built on LangChain + TinyLlama (1B) for question-answering over PDFs,
-                    backed by <span class="text-white">FAISS with HNSW</span> and deployed on Hugging Face Spaces.
-                </p>
-                <div class="flex flex-wrap gap-2 font-mono text-[10px] text-gray-500">
-                    <span class="tag px-2 py-1 rounded">RAG</span>
-                    <span class="tag px-2 py-1 rounded">LangChain</span>
-                    <span class="tag px-2 py-1 rounded">FAISS / HNSW</span>
-                    <span class="tag px-2 py-1 rounded">HF Spaces</span>
-                </div>
-            </a>
-
-            <a href="https://github.com/Adiz2115/Brain-Tumour-Segmentation" target="_blank" rel="noopener"
-               class="reveal glass rounded-xl p-7 group hover:border-neon-purple/40 hover:-translate-y-1 transition-all duration-300">
-                <div class="flex justify-between items-start mb-5">
-                    <span class="px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider bg-white/5 text-gray-400">Dec 2024 — Mar 2025</span>
-                    <span class="text-[10px] font-mono text-gray-600 group-hover:text-neon-purple transition-colors">repo ↗</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-purple transition-colors">Brain Tumour Segmentation</h3>
-                <p class="text-gray-400 text-sm leading-relaxed mb-4">
-                    3D SegResNet and diffusion models for multi-modal MRI brain-tumour segmentation on the BraTS
-                    dataset, with an interactive Gradio + Plotly visualiser.
-                </p>
-                <div class="flex flex-wrap gap-2 font-mono text-[10px] text-gray-500">
-                    <span class="tag px-2 py-1 rounded">SegResNet</span>
-                    <span class="tag px-2 py-1 rounded">Diffusion</span>
-                    <span class="tag px-2 py-1 rounded">BraTS</span>
-                </div>
-            </a>
-
-            <a href="https://github.com/Adiz2115/SentimentAnalysis" target="_blank" rel="noopener"
-               class="reveal glass rounded-xl p-7 group hover:border-neon-amber/40 hover:-translate-y-1 transition-all duration-300 md:col-span-2">
-                <div class="flex justify-between items-start mb-5">
-                    <span class="px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider bg-white/5 text-gray-400">Sept — Nov 2024</span>
-                    <span class="text-[10px] font-mono text-gray-600 group-hover:text-neon-amber transition-colors">repo ↗</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-neon-amber transition-colors">Sentiment Analysis with Fine-Tuned BERT</h3>
-                <p class="text-gray-400 text-sm leading-relaxed mb-4">
-                    Fine-tuned BERT on Sentiment140 (1M+ reviews) and deployed it through the Gradio client. Designed
-                    to feed a stock-prediction loop where scraped news is scored for sentiment.
-                </p>
-                <div class="flex flex-wrap gap-2 font-mono text-[10px] text-gray-500">
-                    <span class="tag px-2 py-1 rounded">BERT</span>
-                    <span class="tag px-2 py-1 rounded">Fine-Tuning</span>
-                    <span class="tag px-2 py-1 rounded">Gradio</span>
-                </div>
-            </a>
-
-        </div>
-    </section>
-
-    <!-- Skills -->
-    <section id="skills" class="py-28 px-5 max-w-5xl mx-auto">
-        <h2 class="reveal text-3xl md:text-4xl font-bold text-white mb-14 flex items-center gap-4">
-            <span class="text-neon-amber font-mono text-xl">03.</span> Stack
-            <span class="h-px bg-white/10 flex-grow"></span>
-        </h2>
-
-        <div class="reveal glass rounded-xl p-6 mb-6">
-            <h3 class="font-mono text-neon-blue text-sm uppercase tracking-widest mb-4">Agentic AI &amp; LLMs</h3>
-            <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-300">
-                <span class="tag px-3 py-1.5 rounded-full">Claude Code &amp; Agent Skills</span>
-                <span class="tag px-3 py-1.5 rounded-full">Multi-Agent Systems</span>
-                <span class="tag px-3 py-1.5 rounded-full">Planner–Verifier</span>
-                <span class="tag px-3 py-1.5 rounded-full">Tool-Calling</span>
-                <span class="tag px-3 py-1.5 rounded-full">MCP</span>
-                <span class="tag px-3 py-1.5 rounded-full">Sandboxed Tools</span>
-                <span class="tag px-3 py-1.5 rounded-full">GEPA / ACE / CRPO</span>
-                <span class="tag px-3 py-1.5 rounded-full">RAG</span>
-                <span class="tag px-3 py-1.5 rounded-full">LangChain</span>
-                <span class="tag px-3 py-1.5 rounded-full">DPO / LoRA</span>
-                <span class="tag px-3 py-1.5 rounded-full">RL Distillation</span>
-                <span class="tag px-3 py-1.5 rounded-full">vLLM</span>
-                <span class="tag px-3 py-1.5 rounded-full">Hugging Face</span>
-            </div>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-6">
-            <div class="reveal glass rounded-xl p-6">
-                <h3 class="font-mono text-neon-blue text-sm uppercase tracking-widest mb-4">Programming &amp; Tools</h3>
-                <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-300">
-                    <span class="tag px-3 py-1.5 rounded-full">Python</span>
-                    <span class="tag px-3 py-1.5 rounded-full">C++ / DSA</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Bash</span>
-                    <span class="tag px-3 py-1.5 rounded-full">CUDA</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Verilog</span>
-                    <span class="tag px-3 py-1.5 rounded-full">RISC Assembly</span>
-                    <span class="tag px-3 py-1.5 rounded-full">MATLAB</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Linux</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Git</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Docker</span>
-                    <span class="tag px-3 py-1.5 rounded-full">pytest</span>
-                    <span class="tag px-3 py-1.5 rounded-full">LaTeX</span>
-                </div>
-            </div>
-
-            <div class="reveal glass rounded-xl p-6">
-                <h3 class="font-mono text-neon-purple text-sm uppercase tracking-widest mb-4">ML &amp; Statistics</h3>
-                <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-300">
-                    <span class="tag px-3 py-1.5 rounded-full">PyTorch</span>
-                    <span class="tag px-3 py-1.5 rounded-full">TensorFlow</span>
-                    <span class="tag px-3 py-1.5 rounded-full">LightGBM</span>
-                    <span class="tag px-3 py-1.5 rounded-full">XGBoost</span>
-                    <span class="tag px-3 py-1.5 rounded-full">scikit-learn</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Transformers</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Diffusion Models</span>
-                    <span class="tag px-3 py-1.5 rounded-full">CNNs</span>
-                    <span class="tag px-3 py-1.5 rounded-full">RNN / LSTM / GRU</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Attention &amp; MoE</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Purged Walk-Forward CV</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Ablation Analysis</span>
-                </div>
-            </div>
-
-            <div class="reveal glass rounded-xl p-6">
-                <h3 class="font-mono text-neon-amber text-sm uppercase tracking-widest mb-4">Domains</h3>
-                <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-300">
-                    <span class="tag px-3 py-1.5 rounded-full">LLMs &amp; Agents</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Diffusion Models</span>
-                    <span class="tag px-3 py-1.5 rounded-full">RL / DPO</span>
-                    <span class="tag px-3 py-1.5 rounded-full">3D Medical Vision</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Time Series</span>
-                    <span class="tag px-3 py-1.5 rounded-full">GPU Architecture</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Multi-GPU HPC</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Deployment &amp; Monitoring</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Streamlit</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Gradio</span>
-                    <span class="tag px-3 py-1.5 rounded-full">Blender</span>
-                    <span class="tag px-3 py-1.5 rounded-full">CAD</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="reveal glass rounded-xl p-6 mt-6">
-            <h3 class="font-mono text-neon-purple text-sm uppercase tracking-widest mb-4">Relevant Coursework</h3>
-            <div class="flex flex-wrap gap-2 text-xs font-mono text-gray-300">
-                <span class="tag px-3 py-1.5 rounded-full">Predictive &amp; Generative AI (Minor)</span>
-                <span class="tag px-3 py-1.5 rounded-full">Machine Learning</span>
-                <span class="tag px-3 py-1.5 rounded-full">Neural Networks &amp; Deep Learning</span>
-                <span class="tag px-3 py-1.5 rounded-full">Foundations of Data Science</span>
-                <span class="tag px-3 py-1.5 rounded-full">Computer Architecture</span>
-                <span class="tag px-3 py-1.5 rounded-full">Signals &amp; Systems</span>
-            </div>
-        </div>
-
-    </section>
-
-    <!-- Achievements -->
-    <section id="education" class="py-28 px-5 max-w-5xl mx-auto">
-        <h2 class="reveal text-3xl md:text-4xl font-bold text-white mb-14 flex items-center gap-4">
-            <span class="text-neon-purple font-mono text-xl">04.</span> Education
-            <span class="h-px bg-white/10 flex-grow"></span>
-        </h2>
-
-        <div class="space-y-4">
-            <div class="reveal glass rounded-xl p-6">
-                <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
-                    <h3 class="text-lg font-semibold text-white">B.Tech (Exchange)</h3>
-                    <time class="font-mono text-xs text-gray-500">2026 — 2027</time>
-                </div>
-                <p class="text-neon-purple font-mono text-sm">IIT Delhi — Final Year Exchange Student</p>
-            </div>
-
-            <div class="reveal glass rounded-xl p-6">
-                <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
-                    <h3 class="text-lg font-semibold text-white">B.Tech, Electrical &amp; Electronics Engineering</h3>
-                    <time class="font-mono text-xs text-gray-500">2023 — 2027</time>
-                </div>
-                <p class="text-neon-blue font-mono text-sm mb-2">National Institute of Technology, Calicut</p>
-                <p class="text-gray-400 text-sm">CGPA <span class="text-white">8.97</span> (current).</p>
-            </div>
-
-            <div class="reveal glass rounded-xl p-6">
-                <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
-                    <h3 class="text-lg font-semibold text-white">Senior Secondary</h3>
-                    <time class="font-mono text-xs text-gray-500">2023</time>
-                </div>
-                <p class="text-neon-amber font-mono text-sm mb-2">Oxford Ind. PU College — Karnataka State Board</p>
-                <p class="text-gray-400 text-sm"><span class="text-white">92.83%</span></p>
-            </div>
-
-            <div class="reveal glass rounded-xl p-6">
-                <div class="flex flex-wrap justify-between items-baseline gap-2 mb-1">
-                    <h3 class="text-lg font-semibold text-white">Secondary</h3>
-                    <time class="font-mono text-xs text-gray-500">2021</time>
-                </div>
-                <p class="text-neon-amber font-mono text-sm mb-2">National Public School, Yeshwanthpur — CBSE</p>
-                <p class="text-gray-400 text-sm"><span class="text-white">96.8%</span></p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Achievements -->
-    <section id="achievements" class="py-28 px-5 max-w-5xl mx-auto">
-        <h2 class="reveal text-3xl md:text-4xl font-bold text-white mb-14 flex items-center gap-4">
-            <span class="text-neon-blue font-mono text-xl">05.</span> Achievements
-            <span class="h-px bg-white/10 flex-grow"></span>
-        </h2>
-
-        <div class="grid md:grid-cols-2 gap-5">
-            <div class="reveal glass rounded-xl p-6">
-                <p class="font-mono text-xs text-neon-blue mb-2">May 2022</p>
-                <h3 class="text-white font-semibold mb-1">KVPY Scholar Award 2021</h3>
-                <p class="text-gray-400 text-sm">All India Rank 1730, awarded by IISc.</p>
-            </div>
-            <div class="reveal glass rounded-xl p-6">
-                <p class="font-mono text-xs text-neon-purple mb-2">April 2023</p>
-                <h3 class="text-white font-semibold mb-1">JEE Mains — 98.74 percentile</h3>
-                <p class="text-gray-400 text-sm">Cleared JEE Advanced.</p>
-            </div>
-            <div class="reveal glass rounded-xl p-6">
-                <p class="font-mono text-xs text-neon-amber mb-2">Jan 2024</p>
-                <h3 class="text-white font-semibold mb-1">DeepLearning.AI TensorFlow Developer</h3>
-                <p class="text-gray-400 text-sm">Professional certificate, Coursera.</p>
-            </div>
-            <div class="reveal glass rounded-xl p-6">
-                <p class="font-mono text-xs text-gray-500 mb-2">2019 — 2021</p>
-                <h3 class="text-white font-semibold mb-1">Olympiads &amp; ANCQ</h3>
-                <p class="text-gray-400 text-sm">High Distinction Excellence Award (Royal Australian Chemistry Institute, ANCQ 2019); zonal medals in NSO, IMO, PRMO; qualified NTSE Round 2.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact" class="py-32 px-5 text-center max-w-3xl mx-auto">
-        <h2 class="reveal text-4xl md:text-5xl font-bold text-white mb-5">Get In Touch</h2>
-        <p class="reveal text-gray-400 mb-10 leading-relaxed">
-            Open to research collaborations and AI/ML roles — especially anything touching LLM agents,
-            generative models or medical imaging.
-        </p>
-
-        <div class="reveal flex flex-col sm:flex-row justify-center gap-3 mb-10 font-mono text-sm">
-            <a href="mailto:adithyar2115@gmail.com" class="glass rounded-lg px-5 py-3 text-gray-300 hover:text-neon-blue hover:border-neon-blue/40 transition-colors">adithyar2115@gmail.com</a>
-            <a href="tel:+919916588160" class="glass rounded-lg px-5 py-3 text-gray-300 hover:text-neon-blue hover:border-neon-blue/40 transition-colors">+91 99165 88160</a>
-        </div>
-
-        <div class="reveal flex justify-center gap-5 mb-6">
-            <a href="https://github.com/Adiz2115" target="_blank" rel="noopener" aria-label="GitHub" class="text-gray-400 hover:text-white transition-colors">
-                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-            </a>
-            <a href="https://linkedin.com/in/adithya-r-094507280" target="_blank" rel="noopener" aria-label="LinkedIn" class="text-gray-400 hover:text-white transition-colors">
-                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-            </a>
-            <a href="mailto:adithya_b230759ee@nitc.ac.in" aria-label="Institute email" class="text-gray-400 hover:text-white transition-colors">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            </a>
-        </div>
-
-        <p class="reveal font-mono text-[11px] text-gray-600">Designed &amp; built by Adithya R</p>
-    </section>
-
-    </div><!-- /content-layer -->
-
-    <script type="module">
-        import * as THREE from 'three';
-        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-        import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
-
-        const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-        const lerp = (a, b, t) => a + (b - a) * t;
-        // Normalises v into 0..1 across [e0,e1] with eased ends.
-        const smoothstep = (e0, e1, v) => {
-            const t = clamp((v - e0) / (e1 - e0), 0, 1);
-            return t * t * (3 - 2 * t);
-        };
-
-        const COL_BLUE   = new THREE.Color('#00f3ff');
-        const COL_PURPLE = new THREE.Color('#bc13fe');
-        const COL_AMBER  = new THREE.Color('#ffb020');
-        const COL_IDLE   = new THREE.Color('#12141c');
-
-        const canvas = document.getElementById('scene-canvas');
-        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const lowPower = window.innerWidth < 768 || navigator.hardwareConcurrency <= 4;
-
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: !lowPower, alpha: true, powerPreference: 'high-performance' });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, lowPower ? 1.5 : 2));
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.05;
-
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x050507, 0.035);
-
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200);
-        const camTarget = new THREE.Vector3();
-
-        scene.add(new THREE.AmbientLight(0x223044, 1.2));
-        const keyLight = new THREE.PointLight(0x00f3ff, 40, 40);
-        keyLight.position.set(4, 6, 6);
-        scene.add(keyLight);
-        const rimLight = new THREE.PointLight(0xbc13fe, 30, 40);
-        rimLight.position.set(-6, 2, -4);
-        scene.add(rimLight);
-        const dieLight = new THREE.PointLight(0xffb020, 0, 22);
-        dieLight.position.set(0, 1.2, 0);
-        scene.add(dieLight);
-
-        // ---------------------------------------------------------------
-        // Transformer stack: N decoder blocks, each a slab of attention heads
-        // ---------------------------------------------------------------
-        const N_LAYERS = 7;
-        const HEADS_PER_SIDE = 4;
-        const HEAD_GAP = 0.62;
-        const BASE_SPACING = 1.15;
-
-        const stack = new THREE.Group();
-        scene.add(stack);
-
-        const headGeo = new THREE.BoxGeometry(0.3, 0.09, 0.3);
-        const slabGeo = new THREE.BoxGeometry(2.55, 0.045, 2.55);
-        const layers = [];
-
-        for (let i = 0; i < N_LAYERS; i++) {
-            const layer = new THREE.Group();
-            layer.position.y = i * BASE_SPACING;
-
-            const slabMat = new THREE.MeshStandardMaterial({
-                color: 0x0d1018, metalness: 0.9, roughness: 0.35,
-                transparent: true, opacity: 0.55
-            });
-            layer.add(new THREE.Mesh(slabGeo, slabMat));
-
-            const edges = new THREE.LineSegments(
-                new THREE.EdgesGeometry(slabGeo),
-                new THREE.LineBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.35 })
-            );
-            layer.add(edges);
-
-            const heads = new THREE.InstancedMesh(
-                headGeo,
-                new THREE.MeshStandardMaterial({ metalness: 0.4, roughness: 0.25, emissiveIntensity: 1 }),
-                HEADS_PER_SIDE * HEADS_PER_SIDE
-            );
-            const m = new THREE.Matrix4();
-            let k = 0;
-            for (let x = 0; x < HEADS_PER_SIDE; x++) {
-                for (let z = 0; z < HEADS_PER_SIDE; z++) {
-                    m.setPosition(
-                        (x - (HEADS_PER_SIDE - 1) / 2) * HEAD_GAP,
-                        0.07,
-                        (z - (HEADS_PER_SIDE - 1) / 2) * HEAD_GAP
-                    );
-                    heads.setMatrixAt(k, m);
-                    heads.setColorAt(k, COL_IDLE);
-                    k++;
-                }
-            }
-            heads.instanceMatrix.needsUpdate = true;
-            layer.add(heads);
-
-            stack.add(layer);
-            layers.push({ group: layer, heads, slabMat, edges });
-        }
-
-        // Residual connections: vertical lines threading every layer
-        const residualPositions = [];
-        for (let x = 0; x < HEADS_PER_SIDE; x++) {
-            for (let z = 0; z < HEADS_PER_SIDE; z++) {
-                if ((x + z) % 2 !== 0) continue;
-                const px = (x - (HEADS_PER_SIDE - 1) / 2) * HEAD_GAP;
-                const pz = (z - (HEADS_PER_SIDE - 1) / 2) * HEAD_GAP;
-                for (let i = 0; i < N_LAYERS - 1; i++) {
-                    residualPositions.push(px, i * BASE_SPACING, pz, px, (i + 1) * BASE_SPACING, pz);
-                }
-            }
-        }
-        const residualGeo = new THREE.BufferGeometry();
-        residualGeo.setAttribute('position', new THREE.Float32BufferAttribute(residualPositions, 3));
-        const residualMat = new THREE.LineBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0.16 });
-        const residuals = new THREE.LineSegments(residualGeo, residualMat);
-        stack.add(residuals);
-        const residualBase = residualGeo.attributes.position.array.slice();
-
-        // Token embeddings streaming upward through the stack
-        const TOKEN_COUNT = lowPower ? 300 : 700;
-        const tokenPos = new Float32Array(TOKEN_COUNT * 3);
-        const tokenSpeed = new Float32Array(TOKEN_COUNT);
-        const stackTop = (N_LAYERS - 1) * BASE_SPACING;
-        for (let i = 0; i < TOKEN_COUNT; i++) {
-            tokenPos[i * 3]     = (Math.random() - 0.5) * 3.0;
-            tokenPos[i * 3 + 1] = Math.random() * (stackTop + 2) - 1;
-            tokenPos[i * 3 + 2] = (Math.random() - 0.5) * 3.0;
-            tokenSpeed[i] = 0.5 + Math.random() * 1.4;
-        }
-        const tokenGeo = new THREE.BufferGeometry();
-        tokenGeo.setAttribute('position', new THREE.BufferAttribute(tokenPos, 3));
-        const tokenMat = new THREE.PointsMaterial({
-            color: 0x8fe9ff, size: 0.045, transparent: true, opacity: 0.85,
-            blending: THREE.AdditiveBlending, depthWrite: false
-        });
-        const tokens = new THREE.Points(tokenGeo, tokenMat);
-        stack.add(tokens);
-
-        // ---------------------------------------------------------------
-        // GPU package: substrate, die with SM grid, HBM stacks
-        // ---------------------------------------------------------------
-        const gpu = new THREE.Group();
-        gpu.position.y = -0.9;
-        scene.add(gpu);
-
-        const substrate = new THREE.Mesh(
-            new THREE.BoxGeometry(9, 0.22, 9),
-            new THREE.MeshStandardMaterial({ color: 0x07110c, metalness: 0.65, roughness: 0.55, transparent: true, opacity: 0 })
-        );
-        gpu.add(substrate);
-
-        const substrateEdges = new THREE.LineSegments(
-            new THREE.EdgesGeometry(substrate.geometry),
-            new THREE.LineBasicMaterial({ color: 0x1f7a5a, transparent: true, opacity: 0.5 })
-        );
-        gpu.add(substrateEdges);
-
-        const die = new THREE.Mesh(
-            new THREE.BoxGeometry(5.2, 0.18, 5.2),
-            new THREE.MeshStandardMaterial({ color: 0x0a0c12, metalness: 0.95, roughness: 0.2, transparent: true, opacity: 0 })
-        );
-        die.position.y = 0.2;
-        gpu.add(die);
-
-        // Streaming multiprocessor grid
-        const SM_SIDE = lowPower ? 16 : 22;
-        const SM_TOTAL = SM_SIDE * SM_SIDE;
-        const SM_PITCH = 4.7 / SM_SIDE;
-        const smMesh = new THREE.InstancedMesh(
-            new THREE.BoxGeometry(SM_PITCH * 0.74, 0.05, SM_PITCH * 0.74),
-            new THREE.MeshStandardMaterial({ metalness: 0.3, roughness: 0.4 }),
-            SM_TOTAL
-        );
-        const smCoords = [];
-        {
-            const m = new THREE.Matrix4();
-            let k = 0;
-            for (let x = 0; x < SM_SIDE; x++) {
-                for (let z = 0; z < SM_SIDE; z++) {
-                    const px = (x - (SM_SIDE - 1) / 2) * SM_PITCH;
-                    const pz = (z - (SM_SIDE - 1) / 2) * SM_PITCH;
-                    m.setPosition(px, 0.31, pz);
-                    smMesh.setMatrixAt(k, m);
-                    smMesh.setColorAt(k, COL_IDLE);
-                    smCoords.push({ x, z, r: Math.hypot(px, pz) });
-                    k++;
-                }
-            }
-            smMesh.instanceMatrix.needsUpdate = true;
-        }
-        gpu.add(smMesh);
-
-        // HBM memory stacks flanking the die
-        const hbmGeo = new THREE.BoxGeometry(0.68, 0.3, 1.7);
-        const hbmMat = new THREE.MeshStandardMaterial({
-            color: 0x0c0f16, metalness: 0.85, roughness: 0.35,
-            emissive: new THREE.Color(0x5a1a8a), emissiveIntensity: 0
-        });
-        const hbmStacks = [];
-        [[-3.2, -1.15], [-3.2, 1.15], [3.2, -1.15], [3.2, 1.15]].forEach(([x, z]) => {
-            const h = new THREE.Mesh(hbmGeo, hbmMat.clone());
-            h.position.set(x, 0.28, z);
-            gpu.add(h);
-            hbmStacks.push(h);
-        });
-
-        // Interconnect traces from HBM into the die
-        const tracePositions = [];
-        for (let i = 0; i < 26; i++) {
-            const z = (i / 25 - 0.5) * 4.4;
-            tracePositions.push(-4.3, 0.24, z, -2.6, 0.24, z);
-            tracePositions.push(4.3, 0.24, z, 2.6, 0.24, z);
-        }
-        const traceGeo = new THREE.BufferGeometry();
-        traceGeo.setAttribute('position', new THREE.Float32BufferAttribute(tracePositions, 3));
-        const traceMat = new THREE.LineBasicMaterial({ color: 0xffb020, transparent: true, opacity: 0 });
-        gpu.add(new THREE.LineSegments(traceGeo, traceMat));
-
-        // Shockwave ring emitted at the moment of embedding
-        const ring = new THREE.Mesh(
-            new THREE.RingGeometry(0.9, 1.05, 96),
-            new THREE.MeshBasicMaterial({ color: 0x00f3ff, transparent: true, opacity: 0, side: THREE.DoubleSide, blending: THREE.AdditiveBlending })
-        );
-        ring.rotation.x = -Math.PI / 2;
-        ring.position.y = 0.35;
-        gpu.add(ring);
-
-        // Throughput particles racing across the die once it's live
-        const FLOW_COUNT = lowPower ? 400 : 1100;
-        const flowPos = new Float32Array(FLOW_COUNT * 3);
-        const flowAxis = new Uint8Array(FLOW_COUNT);
-        const flowSpeed = new Float32Array(FLOW_COUNT);
-        for (let i = 0; i < FLOW_COUNT; i++) {
-            flowAxis[i] = Math.random() < 0.5 ? 0 : 1;
-            flowPos[i * 3]     = (Math.random() - 0.5) * 9;
-            flowPos[i * 3 + 1] = 0.42 + Math.random() * 0.5;
-            flowPos[i * 3 + 2] = (Math.random() - 0.5) * 9;
-            flowSpeed[i] = (2.5 + Math.random() * 5) * (Math.random() < 0.5 ? 1 : -1);
-        }
-        const flowGeo = new THREE.BufferGeometry();
-        flowGeo.setAttribute('position', new THREE.BufferAttribute(flowPos, 3));
-        const flowMat = new THREE.PointsMaterial({
-            color: 0xffd07a, size: 0.055, transparent: true, opacity: 0,
-            blending: THREE.AdditiveBlending, depthWrite: false
-        });
-        gpu.add(new THREE.Points(flowGeo, flowMat));
-
-        // Ambient starfield for depth
-        const DUST_COUNT = lowPower ? 250 : 600;
-        const dustPos = new Float32Array(DUST_COUNT * 3);
-        for (let i = 0; i < DUST_COUNT; i++) {
-            dustPos[i * 3]     = (Math.random() - 0.5) * 60;
-            dustPos[i * 3 + 1] = (Math.random() - 0.5) * 40;
-            dustPos[i * 3 + 2] = (Math.random() - 0.5) * 50 - 12;
-        }
-        const dustGeo = new THREE.BufferGeometry();
-        dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
-        scene.add(new THREE.Points(dustGeo, new THREE.PointsMaterial({
-            color: 0x4a5a78, size: 0.07, transparent: true, opacity: 0.5, depthWrite: false
-        })));
-
-        // ---------------------------------------------------------------
-        // Post-processing
-        // ---------------------------------------------------------------
-        const composer = new EffectComposer(renderer);
-        composer.addPass(new RenderPass(scene, camera));
-        const bloom = new UnrealBloomPass(
-            new THREE.Vector2(window.innerWidth, window.innerHeight),
-            0.75, 0.5, 0.2
-        );
-        composer.addPass(bloom);
-        composer.addPass(new OutputPass());
-
-        // ---------------------------------------------------------------
-        // Camera keyframes along scroll progress
-        // ---------------------------------------------------------------
-        const CAM_KEYS = [
-            { p: 0.00, pos: [0.6, 3.6, 13.8], look: [0, 3.4, 0] },
-            { p: 0.32, pos: [6.4, 5.2, 8.2],  look: [0, 3.0, 0] },
-            { p: 0.58, pos: [1.4, 8.6, 10.0], look: [0, 1.4, 0] },
-            { p: 0.78, pos: [0.0, 5.6, 8.0],  look: [0, 0.0, 0] },
-            { p: 1.00, pos: [-1.6, 3.0, 6.2], look: [0, -0.4, 0] },
-        ];
-
-        function sampleCamera(p, outPos, outLook) {
-            let a = CAM_KEYS[0], b = CAM_KEYS[CAM_KEYS.length - 1];
-            for (let i = 0; i < CAM_KEYS.length - 1; i++) {
-                if (p >= CAM_KEYS[i].p && p <= CAM_KEYS[i + 1].p) {
-                    a = CAM_KEYS[i]; b = CAM_KEYS[i + 1];
-                    break;
-                }
-            }
-            const t = smoothstep(a.p, b.p, p);
-            outPos.set(lerp(a.pos[0], b.pos[0], t), lerp(a.pos[1], b.pos[1], t), lerp(a.pos[2], b.pos[2], t));
-            outLook.set(lerp(a.look[0], b.look[0], t), lerp(a.look[1], b.look[1], t), lerp(a.look[2], b.look[2], t));
-
-            // On wide screens the hero copy sits left, so bias the model into the right half
-            if (window.innerWidth >= 1024) {
-                outLook.x -= 3.4 * (1 - smoothstep(0.02, 0.24, p));
-            }
-        }
-
-        // ---------------------------------------------------------------
-        // Scroll + pointer state
-        // ---------------------------------------------------------------
-        let scrollP = 0, smoothP = 0;
-        const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
-
-        function readScroll() {
-            const max = document.documentElement.scrollHeight - window.innerHeight;
-            scrollP = max > 0 ? clamp(window.scrollY / max, 0, 1) : 0;
-        }
-        readScroll();
-        window.addEventListener('scroll', readScroll, { passive: true });
-
-        window.addEventListener('pointermove', (e) => {
-            pointer.tx = (e.clientX / window.innerWidth - 0.5) * 2;
-            pointer.ty = (e.clientY / window.innerHeight - 0.5) * 2;
-        }, { passive: true });
-
-        // HUD elements
-        const scrim = document.getElementById('scene-scrim');
-        const hudStage = document.getElementById('hud-stage');
-        const hudTps = document.getElementById('hud-tps');
-        const hudBar = document.getElementById('hud-bar');
-        const hudLed = document.getElementById('hud-led');
-        const STAGES = [
-            { at: 0.00, label: 'Model Graph',   color: '#00f3ff' },
-            { at: 0.30, label: 'Attention Map', color: '#bc13fe' },
-            { at: 0.52, label: 'Compiling',     color: '#bc13fe' },
-            { at: 0.66, label: 'Embedded',      color: '#ffb020' },
-            { at: 0.80, label: 'Inference',     color: '#ffb020' },
-        ];
-        let lastStage = -1;
-        let displayTps = 0;
-
-        // ---------------------------------------------------------------
-        // Frame loop
-        // ---------------------------------------------------------------
-        const camPos = new THREE.Vector3();
-        const tmpColor = new THREE.Color();
-        const clock = new THREE.Clock();
-
-        function frame() {
-            const dt = Math.min(clock.getDelta(), 0.05);
-            const t = clock.getElapsedTime();
-
-            smoothP += (scrollP - smoothP) * (reducedMotion ? 1 : 0.075);
-            const p = smoothP;
-
-            // Phase weights
-            const attentionOn = smoothstep(0.12, 0.36, p);            // heads fire up
-            const compress    = smoothstep(0.40, 0.66, p);            // stack collapses
-            const embedded    = smoothstep(0.60, 0.72, p);            // slotted into the die
-            const throughput  = smoothstep(0.68, 0.94, p);            // die runs hot
-
-            // --- Transformer stack ---
-            const spacing = lerp(BASE_SPACING, 0.055, compress);
-            // Collapsing to zero is what sells the stack being absorbed by the die
-            const stackScale = lerp(1, 0.86, compress) * (1 - embedded);
-            stack.visible = stackScale > 0.001;
-            stack.scale.setScalar(stackScale);
-            stack.position.y = lerp(0.4, -0.42, compress);
-            stack.rotation.y = reducedMotion ? 0.4 : t * 0.12 + compress * 1.2;
-
-            for (let i = 0; i < N_LAYERS; i++) {
-                const L = layers[i];
-                L.group.position.y = i * spacing;
-                // Layers fan out slightly while attention is active, then square up
-                L.group.rotation.y = Math.sin(t * 0.5 + i * 0.6) * 0.12 * (1 - compress);
-                L.slabMat.opacity = lerp(0.55, 0.0, embedded);
-                L.edges.material.opacity = lerp(0.35, 0.0, embedded);
-
-                // Head activation travels up the stack like a forward pass
-                const pulse = (Math.sin(t * 1.8 - i * 0.75) * 0.5 + 0.5);
-                for (let h = 0; h < L.heads.count; h++) {
-                    const jitter = Math.sin(t * 3.1 + h * 1.7 + i) * 0.5 + 0.5;
-                    const act = attentionOn * (1 - embedded) * (0.25 + 0.75 * pulse * jitter);
-                    tmpColor.copy(COL_IDLE).lerp(i % 2 ? COL_PURPLE : COL_BLUE, act);
-                    L.heads.setColorAt(h, tmpColor);
-                }
-                L.heads.instanceColor.needsUpdate = true;
-            }
-
-            // Residual lines shrink with the stack
-            {
-                const arr = residualGeo.attributes.position.array;
-                const k = spacing / BASE_SPACING;
-                for (let i = 1; i < arr.length; i += 3) arr[i] = residualBase[i] * k;
-                residualGeo.attributes.position.needsUpdate = true;
-                residualMat.opacity = lerp(0.16, 0, embedded);
-            }
-
-            // --- Token flow through the stack ---
-            {
-                const arr = tokenGeo.attributes.position.array;
-                const top = stackTop * (spacing / BASE_SPACING) + 1.2;
-                const speedScale = reducedMotion ? 0.2 : 1;
-                for (let i = 0; i < TOKEN_COUNT; i++) {
-                    arr[i * 3 + 1] += tokenSpeed[i] * dt * speedScale * (1 + compress * 2.5);
-                    if (arr[i * 3 + 1] > top) arr[i * 3 + 1] = -1.2;
-                }
-                tokenGeo.attributes.position.needsUpdate = true;
-                tokenMat.opacity = lerp(0.85, 0.0, embedded);
-            }
-
-            // --- Shockwave at the moment of embedding ---
-            {
-                const age = clamp((p - 0.635) / 0.085, 0, 1);
-                ring.scale.setScalar(lerp(0.35, 4.6, age));
-                ring.material.opacity = Math.sin(age * Math.PI) * 0.85;
-            }
-
-            // --- GPU die ---
-            gpu.visible = p > 0.24;
-            const dieReveal = smoothstep(0.26, 0.5, p);
-            substrate.material.opacity = dieReveal;
-            die.material.opacity = dieReveal;
-            gpu.position.y = lerp(-4.5, -0.9, dieReveal);
-            traceMat.opacity = throughput * 0.4;
-            substrateEdges.material.opacity = dieReveal * 0.5;
-            dieLight.intensity = throughput * 10;
-
-            // SM occupancy: waves of work sweeping across the grid
-            if (dieReveal > 0.01) {
-                for (let i = 0; i < SM_TOTAL; i++) {
-                    const c = smCoords[i];
-                    const wave = Math.sin(c.r * 2.6 - t * 6) * 0.5 + 0.5;
-                    const scatter = Math.sin(c.x * 1.9 + c.z * 2.7 + t * 4) * 0.5 + 0.5;
-                    const load = embedded * (0.18 + 0.82 * throughput) * (0.35 + 0.65 * wave * scatter);
-                    tmpColor.copy(COL_IDLE).lerp(COL_BLUE, clamp(load * 1.3, 0, 1)).lerp(COL_AMBER, clamp((load - 0.48) * 1.5, 0, 1));
-                    smMesh.setColorAt(i, tmpColor);
-                }
-                smMesh.instanceColor.needsUpdate = true;
-            }
-
-            hbmStacks.forEach((h, i) => {
-                h.material.emissiveIntensity = throughput * (0.5 + 0.35 * (Math.sin(t * 5 + i * 1.6) * 0.5 + 0.5));
-            });
-
-            // --- Throughput particles ---
-            {
-                const arr = flowGeo.attributes.position.array;
-                const speedScale = throughput * (reducedMotion ? 0.2 : 1);
-                for (let i = 0; i < FLOW_COUNT; i++) {
-                    const idx = i * 3 + (flowAxis[i] === 0 ? 0 : 2);
-                    arr[idx] += flowSpeed[i] * dt * speedScale;
-                    if (arr[idx] > 4.6) arr[idx] = -4.6;
-                    else if (arr[idx] < -4.6) arr[idx] = 4.6;
-                }
-                flowGeo.attributes.position.needsUpdate = true;
-                flowMat.opacity = throughput * 0.5;
-            }
-
-            // --- Camera ---
-            sampleCamera(p, camPos, camTarget);
-            pointer.x += (pointer.tx - pointer.x) * 0.05;
-            pointer.y += (pointer.ty - pointer.y) * 0.05;
-            camera.position.copy(camPos);
-            camera.position.x += pointer.x * 0.9;
-            camera.position.y += -pointer.y * 0.5;
-            camera.lookAt(camTarget);
-
-            keyLight.intensity = lerp(40, 12, throughput);
-            rimLight.intensity = lerp(30, 8, throughput);
-            bloom.strength = lerp(0.7, 0.8, throughput);
-            // Narrow layouts centre their text over the model, so they need a heavier scrim
-            const scrimFloor = window.innerWidth < 1024 ? 0.52 : 0.16;
-            scrim.style.opacity = (scrimFloor + (0.72 - scrimFloor) * throughput).toFixed(3);
-
-            // --- HUD ---
-            let stageIdx = 0;
-            for (let i = 0; i < STAGES.length; i++) if (p >= STAGES[i].at) stageIdx = i;
-            if (stageIdx !== lastStage) {
-                lastStage = stageIdx;
-                hudStage.textContent = STAGES[stageIdx].label;
-                hudStage.style.color = STAGES[stageIdx].color;
-                hudLed.style.backgroundColor = STAGES[stageIdx].color;
-            }
-            const targetTps = throughput * 184320 * (0.92 + Math.sin(t * 7) * 0.08);
-            displayTps += (targetTps - displayTps) * 0.12;
-            hudTps.textContent = Math.round(displayTps).toLocaleString('en-US');
-            hudBar.style.width = `${Math.round(throughput * 100)}%`;
-
-            composer.render();
-            requestAnimationFrame(frame);
-        }
-        frame();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            composer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
-
-    <script>
-        // --- Hero title character reveal ---
-        const heroTitle = document.getElementById('hero-title');
-        const heroText = heroTitle.textContent.trim();
-        heroTitle.textContent = '';
-        heroText.split('').forEach((ch, i) => {
-            const span = document.createElement('span');
-            span.className = 'hero-char';
-            span.textContent = ch === ' ' ? ' ' : ch;
-            span.style.transition = 'opacity .5s ease, transform .5s cubic-bezier(.2,.7,.2,1)';
-            span.style.transitionDelay = `${300 + i * 60}ms`;
-            heroTitle.appendChild(span);
-        });
-        requestAnimationFrame(() => {
-            heroTitle.querySelectorAll('.hero-char').forEach(s => {
-                s.style.opacity = '1';
-                s.style.transform = 'none';
-            });
-        });
-
-        // --- Scroll reveals ---
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
-
-        document.querySelectorAll('.reveal').forEach((el, i) => {
-            el.style.transitionDelay = `${(i % 4) * 80}ms`;
-            revealObserver.observe(el);
-        });
-
-        // --- Active section tracking for nav + rail ---
-        const sectionIds = ['about', 'experience', 'projects', 'skills', 'education', 'achievements', 'contact'];
-        const sectionObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                const id = entry.target.id;
-                document.querySelectorAll('.rail-item').forEach(a => {
-                    a.classList.toggle('on', a.getAttribute('href') === `#${id}`);
-                });
-                document.querySelectorAll('.nav-link').forEach(a => {
-                    a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
-                });
-            });
-        }, { threshold: 0.3 });
-        sectionIds.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) sectionObserver.observe(el);
-        });
-
-        // --- Mobile menu ---
-        const menuBtn = document.getElementById('menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-        mobileMenu.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A') mobileMenu.classList.add('hidden');
-        });
-    </script>
+<body>
+<main>
+
+<header>
+  <h1>Adithya R</h1>
+  <p class="affil">
+    B.Tech, Electrical &amp; Electronics Engineering, NIT Calicut<br>
+    Final-year exchange student, Dept. of Computer Science &amp; Engineering, IIT Delhi
+  </p>
+  <p class="links">
+    <a href="mailto:adithyar2115@gmail.com">Email</a><a href="https://github.com/Adiz2115">GitHub</a><a href="https://www.linkedin.com/in/adithya-r-094507280">LinkedIn</a>
+  </p>
+</header>
+
+<section id="about">
+  <p>
+    I am a final-year undergraduate in Electrical &amp; Electronics Engineering at NIT Calicut
+    (minor in AI/ML), spending my final year on exchange at IIT Delhi, where I work with
+    Prof. Maya Ramanath on query optimization for vector retrieval.
+    Previously I was a research intern at IBM Research, working on LLM agents and post-training,
+    and at IISc Bangalore, working on 3D diffusion models for cardiac CT.
+  </p>
+  <p>
+    My interests share a thread: models that improve their own behaviour from experience, and
+    systems that let large models run efficiently. Current topics are LLM agents and post-training,
+    retrieval and vector search, efficient inference for large generative models, deep learning
+    for 3D medical imaging, and physics-informed ML.
+  </p>
+  <p>I am available for research positions from January to June 2027.</p>
+</section>
+
+<section id="publications">
+  <h2>Publications</h2>
+  <ul class="pubs">
+    <li>
+      <span class="title">Fidelity Synopses: Pre-Execution Plan Selection for Approximate Vector Search</span>
+      <span class="authors"><span class="me">Adithya Ramanatha</span>, Sanskar S. Singh, Maya Ramanath</span>
+      <span class="venue">Submitted to VLDB 2027. arXiv:2610.41407, October 2026.</span>
+      <a href="https://arxiv.org/abs/2610.41407">arXiv</a>
+    </li>
+    <li>
+      <span class="title">Data-Driven Magnetic Hysteresis Modeling Using a Physics Regularised MoE-LSTM Framework</span>
+      <span class="venue">IEEE Energy Conversion Congress and Exposition – Europe (ECCE Europe), 2026.</span>
+      <a href="https://ieeexplore.ieee.org/document/11738157">paper</a> / <a href="https://www.youtube.com/watch?v=nFvaGZiIaTA">video</a>
+    </li>
+    <li>
+      <span class="title">Predictive Analysis for Hydrogen Production using Novel Ensemble Machine Learning Models</span>
+      <span class="venue">5th IEEE International Conference on Sustainable Energy and Future Electric Transportation (SeFet), July 2025.</span>
+      <a href="https://ieeexplore.ieee.org/abstract/document/11255160/">paper</a>
+    </li>
+    <li>
+      <span class="title">Attention Based Bi-LSTM Bi-GRU Model for Prediction of Electric Vehicle Charging Demand</span>
+      <span class="venue">1st International Conference on Power Electronic Converters for Transportation and Energy Applications, June 2025.</span>
+      <a href="https://ieeexplore.ieee.org/abstract/document/11076455/">paper</a>
+    </li>
+    <li>
+      <span class="title">DDIP-150: a multi-centre CBCT dataset for dental implant-site planning</span>
+      <span class="venue">In preparation.</span>
+    </li>
+  </ul>
+</section>
+
+<section id="experience">
+  <h2>Research Experience</h2>
+
+  <div class="entry">
+    <div class="entry-head"><strong>Indian Institute of Technology Delhi</strong><span class="date">2026 – present</span></div>
+    <p class="role">Research with Prof. Maya Ramanath, Dept. of CSE</p>
+    <ul>
+      <li>Vector search engines offer many index configurations (HNSW, IVFPQ, OPQ) that trade cost against fidelity, but deployments run every query on one configuration sized for the hardest queries. On 5.8M LAION items, running each query on its cheapest adequate configuration would roughly halve cost.</li>
+      <li>Fidelity is hard to predict before execution, since checking it needs the exact search the index exists to avoid. Borrowing synopses from relational query optimizers, the method splits the embedding space into cells around landmarks and records offline how often each configuration meets the target in each cell; at query time a nearest-landmark lookup gives a calibrated estimate and an optimizer picks a configuration within the workload's miss budget.</li>
+      <li>Across 16 embedding-model and query-direction settings, cost fell to a median 0.72× of a static deployment, with 21–32&nbsp;µs lookups.</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head"><strong>IBM Research, Gurgaon</strong><span class="date">May – Jul 2026</span></div>
+    <p class="role">Research Intern, Agentic AI</p>
+    <ul>
+      <li>Built a platform for optimizing and testing agent policies, a React and FastAPI app to launch, pause and watch runs live and read every trajectory. It runs on tau2-bench, where an LLM plays the customer, and AppWorld (9 apps, 457 APIs). Wrote the AppWorld integration and LLM-generated tasks and databases that stress-test specific policy rules.</li>
+      <li>Designed CRPO (Compressed Repair Prompt Optimizer), a prompt optimizer for small optimization budgets. On AppWorld it raised Task Goal Completion from 75.8 to 89.9, against 83.7 for ACE, and from 71.3 to 83.6 on apps unseen during optimization.</li>
+      <li>The discovered policies were long and had to sit in every prompt, so I moved them into the weights with DPO on LoRA adapters. Average reward rose from 0.27 to 0.53 with no policy in context, above pasting the full policy in (0.50).</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head"><strong>Indian Institute of Science, Bangalore</strong><span class="date">May – Jul 2025</span></div>
+    <p class="role">Research Intern, FIST Lab, with Prof. Jayaprakash</p>
+    <ul>
+      <li>Coronary artery calcium scoring from cardiac CT. Designed 3D diffusion-based probabilistic models for segmenting small calcifications and trained them on the lab's multi-GPU cluster; reached 0.87 Dice, in line with published results, with a model under 3&nbsp;MB.</li>
+    </ul>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head"><strong>Gas Turbine Research Establishment (GTRE), DRDO</strong><span class="date">Jun – Jul 2024</span></div>
+    <p class="role">AI/ML Intern, AI &amp; ML Group</p>
+    <ul>
+      <li>Strain gauges on aero-engine parts often fail during development test runs. Built ML virtual sensors that reconstruct the readings of one or several failed gauges from the remaining channels, using an LSTM and random-forest ensemble on 10&nbsp;Hz RMS and speed series derived from the raw high-frequency signals.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="projects">
+  <h2>Projects</h2>
+
+  <div class="entry">
+    <div class="entry-head"><strong>DDIP-150: dental implant planning from CBCT</strong><span class="date">2026 – present</span></div>
+    <p>With clinicians and PhD researchers, who collected and annotated 150 CBCT scans from 3 scanners (207 implant sites). I lead the ML side: preprocessing, a leakage-free patient-level split, and a benchmark of five 3D segmentation architectures (SegResNet best, 61.9% Dice, 2.17&nbsp;mm HD95). Also ran the inter- and intra-observer reliability analysis that validates the labels. Now building a network that jointly segments the implant site and regresses its cylinder geometry.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head"><strong>MagNet Challenge 2 (Princeton University)</strong><span class="date">Aug 2025 – Jan 2026</span></div>
+    <p>Modelled non-linear B–H hysteresis in power magnetic materials with a physics-regularised mixture of LSTM experts, multi-head cross-attention and temperature conditioning, gated across operating regimes. Extended into the ECCE Europe 2026 paper.</p>
+    <p class="meta"><a href="https://www.youtube.com/watch?v=nFvaGZiIaTA">video</a></p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head"><strong>qwen-engine: CUDA inference for Qwen-Image on a 2&nbsp;GB GPU</strong><span class="date">2026</span></div>
+    <p>From-scratch C++/CUDA engine that runs Qwen-Image (7B diffusion transformer with an 8B vision-language encoder) for text-to-image and editing on a 2&nbsp;GB laptop GPU, streaming weights layer by layer from SSD to pinned RAM to VRAM on overlapped CUDA streams, with custom quantized GEMM, attention, RoPE and convolution kernels. Validated stage by stage against the official pipeline (int8 output 35.4&nbsp;dB PSNR). The most useful finding was a failure: 4-bit weights break the text encoder, because a few massive activations amplify quantization noise, while 8-bit does not.</p>
+    <p class="meta">C++17, CUDA, Python, Gradio</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head"><strong>kade: a terminal assistant that learns from its user</strong><span class="date">2026</span></div>
+    <p>Turns plain-English requests into shell commands. A planner proposes, a second model reviews each command against intent, and a rule-based (non-LLM) safety checker can refuse a command before the user is asked; a malicious planner with a rubber-stamping verifier is still blocked. Corrections become lessons fed into later plans, and requests that succeed repeatedly become reusable workflows, stored as plain, redacted files the user can edit.</p>
+    <p class="meta">Python, Ollama, OpenAI-compatible APIs, pytest · <a href="https://github.com/Adiz2115/kade">code</a></p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head"><strong>earner: systematic equity research (NSE)</strong><span class="date">2026</span></div>
+    <p>LightGBM cross-sectional model with validation built to resist self-deception: purged walk-forward CV with embargo, lookahead guards checked by truncation testing, a full Indian transaction-cost model, and a gate that disables any model below a minimum information coefficient. Research and paper trading only.</p>
+    <p class="meta">Python, LightGBM, scikit-learn, Streamlit · <a href="https://github.com/Adiz2115/earner">code</a></p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head"><strong>Smaller projects</strong></div>
+    <ul>
+      <li><a href="https://huggingface.co/spaces/AdithyaR2115/hackpyrag">NotesLLM</a>: RAG question answering over documents (LangChain, TinyLlama-1B, FAISS/HNSW), deployed on Hugging Face Spaces.</li>
+      <li><a href="https://github.com/Adiz2115/Brain-Tumour-Segmentation">Brain tumour segmentation</a>: 3D SegResNet and diffusion models on BraTS MRI.</li>
+      <li><a href="https://github.com/Adiz2115/SentimentAnalysis">News sentiment</a>: BERT fine-tuned on Sentiment140.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="education">
+  <h2>Education</h2>
+
+  <div class="entry">
+    <div class="entry-head"><strong>Indian Institute of Technology Delhi</strong><span class="date">2026 – 2027</span></div>
+    <p class="role">Final-year exchange student, Dept. of Computer Science &amp; Engineering</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head"><strong>National Institute of Technology Calicut</strong><span class="date">2023 – 2027</span></div>
+    <p class="role">B.Tech, Electrical &amp; Electronics Engineering; minor in AI/ML</p>
+    <p class="meta">Coursework: Essentials of AI &amp; Machine Learning, Predictive AI &amp; Generative AI, Introduction to Large Language Models, Deep Learning (IIT Ropar), Artificial Neural Networks &amp; Fuzzy Logic Systems, AI for Healthcare, Foundations of Data Science, Digital Signal Processing</p>
+  </div>
+</section>
+
+<section id="awards">
+  <h2>Honors &amp; Awards</h2>
+  <ul class="plain">
+    <li>KVPY Scholar, All India Rank 1730, awarded by IISc <span class="date">· 2021</span></li>
+    <li>JEE Main, 98.74 percentile; qualified JEE Advanced <span class="date">· 2023</span></li>
+    <li>High Distinction, Australian National Chemistry Quiz (Royal Australian Chemical Institute) <span class="date">· 2019</span></li>
+    <li>Zonal medals in NSO, IMO and PRMO; qualified NTSE Stage 2</li>
+    <li><a href="https://coursera.org/share/590a8fc41d9290c1e4cd26505178f702">DeepLearning.AI TensorFlow Developer</a> professional certificate <span class="date">· 2024</span></li>
+  </ul>
+</section>
+
+<section id="skills">
+  <h2>Skills</h2>
+  <dl>
+    <dt>Languages</dt>
+    <dd>Python, C++17, CUDA, Bash, MATLAB, Verilog, LaTeX</dd>
+    <dt>Research areas</dt>
+    <dd>LLM agents and tool calling, prompt optimization, post-training (DPO, LoRA), diffusion models, mixture-of-experts, quantization, approximate nearest-neighbour search, 3D medical image segmentation, time-series modelling</dd>
+    <dt>Frameworks</dt>
+    <dd>PyTorch, Hugging Face (Transformers, diffusers), vLLM, MONAI, FAISS, LangChain, scikit-learn, LightGBM, Docker, Git, multi-GPU HPC clusters</dd>
+  </dl>
+</section>
+
+<footer>
+  Outside work: sketching, speed cubing, badminton and table tennis.<br>
+  Last updated November 2026.
+</footer>
+
+</main>
 </body>
 </html>
